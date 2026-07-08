@@ -1,0 +1,162 @@
+export type TaskType =
+  | "resume_optimize"
+  | "mock_interview"
+  | "interview_answer"
+  | "interview_review"
+  | "project_deep_dive"
+  | "clarify";
+
+export type ArtifactType =
+  | "empty"
+  | "resume"
+  | "interview"
+  | "review"
+  | "project"
+  | "clarify";
+
+export type MessageRole = "user" | "assistant" | "system";
+
+export interface ChatMessage {
+  id: string;
+  role: MessageRole;
+  content: string;
+  createdAt: string;
+  attachments?: UploadedAttachment[];
+}
+
+export interface UploadedAttachment {
+  id: string;
+  name: string;
+  type: string;
+  text: string;
+  status: "ready" | "error";
+  error?: string;
+}
+
+export interface AgentTraceStep {
+  id: string;
+  label: string;
+  status: "pending" | "running" | "done" | "error";
+}
+
+export interface WorkspaceContext {
+  jd?: string;
+  resume?: string;
+  project?: string;
+  interview?: InterviewArtifact;
+}
+
+export interface AgentDecision {
+  task: TaskType;
+  intendedTask: TaskType;
+  artifactType: ArtifactType;
+  missing: Array<"jd" | "resume" | "project" | "interview">;
+  userPrompt: string;
+}
+
+export interface ResumeArtifact {
+  type: "resume";
+  title: string;
+  jdSummary: {
+    role: string;
+    seniority: string;
+    mustHave: string[];
+    niceToHave: string[];
+  };
+  matchScore: number;
+  strengths: string[];
+  gaps: string[];
+  optimizations: Array<{
+    section: string;
+    before: string;
+    after: string;
+    reason: string;
+  }>;
+}
+
+export interface InterviewQuestion {
+  id: string;
+  question: string;
+  focus: string;
+  answer?: string;
+  feedback?: string;
+  followUp?: string;
+}
+
+export interface InterviewArtifact {
+  type: "interview";
+  title: string;
+  currentIndex: number;
+  status: "ready" | "in_progress" | "completed";
+  questions: InterviewQuestion[];
+  finalReview?: ReviewArtifact;
+}
+
+export interface ReviewArtifact {
+  type: "review";
+  title: string;
+  overallScore: number;
+  dimensionScores: Array<{
+    name: string;
+    score: number;
+    evidence: string;
+  }>;
+  weaknessTags: string[];
+  improvements: string[];
+  practicePlan: string[];
+}
+
+export interface ProjectArtifact {
+  type: "project";
+  title: string;
+  star: {
+    situation: string;
+    task: string;
+    action: string;
+    result: string;
+  };
+  pitchScript: string;
+  followUps: Array<{
+    question: string;
+    answerFrame: string;
+  }>;
+  riskPoints: string[];
+}
+
+export interface ClarifyArtifact {
+  type: "clarify";
+  title: string;
+  missing: string[];
+  nextQuestion: string;
+}
+
+export type Artifact =
+  | ResumeArtifact
+  | InterviewArtifact
+  | ReviewArtifact
+  | ProjectArtifact
+  | ClarifyArtifact;
+
+export interface HistoryRecord {
+  id: string;
+  type: ArtifactType;
+  title: string;
+  createdAt: string;
+  summary: string;
+  artifact: Artifact;
+}
+
+export interface SettingsState {
+  apiKey: string;
+  baseUrl: string;
+  demoMode: boolean;
+  modelProvider: "deepseek";
+  model: string;
+}
+
+export type StreamEvent =
+  | { type: "trace"; label: string }
+  | { type: "delta"; text: string }
+  | { type: "artifact"; artifact: Artifact }
+  | { type: "error"; message: string }
+  | { type: "done" };
