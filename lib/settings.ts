@@ -5,11 +5,7 @@ import type { SettingsState } from "@/types/agent";
 const SETTINGS_KEY = "interviewflow.settings.v1";
 
 export const defaultSettings: SettingsState = {
-  apiKey: "",
-  baseUrl: "https://api.deepseek.com",
-  demoMode: true,
-  modelProvider: "deepseek",
-  model: "deepseek-chat"
+  demoMode: true
 };
 
 export function loadSettings(): SettingsState {
@@ -21,7 +17,7 @@ export function loadSettings(): SettingsState {
     return defaultSettings;
   }
   try {
-    return { ...defaultSettings, ...JSON.parse(raw), modelProvider: "deepseek" };
+    return { ...defaultSettings, ...JSON.parse(raw) };
   } catch {
     return defaultSettings;
   }

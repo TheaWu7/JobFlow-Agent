@@ -31,11 +31,16 @@ export function ArtifactPanel({ artifact }: { artifact: Artifact | null }) {
       </div>
       <p className="mt-3 text-sm text-muted">{artifact.nextQuestion}</p>
       <div className="mt-4 flex flex-wrap gap-2">
-        {artifact.missing.map((item) => (
+        {(artifact.missing ?? []).map((item) => (
           <span key={item} className="rounded-md border border-line bg-panel px-2 py-1 text-xs text-muted">
             {item}
           </span>
         ))}
+        {(!artifact.missing || artifact.missing.length === 0) && (
+          <span className="rounded-md border border-line bg-panel px-2 py-1 text-xs text-muted">
+            任务类型未指明
+          </span>
+        )}
       </div>
     </section>
   );

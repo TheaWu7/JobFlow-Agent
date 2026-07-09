@@ -104,6 +104,9 @@ export function mergeContextFromInput(
 }
 
 export function buildClarifyMessage(missing: AgentDecision["missing"], task: TaskType) {
+  if (!missing.length) {
+    return "我可以继续处理，但还不清楚你想做哪一种任务。你可以直接说：帮我优化简历、开始模拟面试、复盘刚才的面试，或者帮我深挖这个项目。";
+  }
   const names = missing.map(materialLabel).join("、");
   const taskName = taskLabel(task);
   return `我可以继续处理 ${taskName}，但还缺少 ${names}。请直接把相关内容粘贴到聊天里，或通过附件补充，我会自动接上当前任务。`;

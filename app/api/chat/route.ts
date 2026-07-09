@@ -2,7 +2,6 @@ import type {
   Artifact,
   InterviewArtifact,
   ReviewArtifact,
-  SettingsState,
   TaskType,
   WorkspaceContext
 } from "@/types/agent";
@@ -15,7 +14,7 @@ interface ChatRequest {
   input: string;
   context: WorkspaceContext;
   transcript: string;
-  settings: SettingsState;
+  demoMode: boolean;
 }
 
 export async function POST(request: Request) {
@@ -30,7 +29,7 @@ export async function POST(request: Request) {
 
       try {
         send({ type: "trace", label: "API 已接收任务，开始编排模型请求" });
-        if (body.settings.demoMode) {
+        if (body.demoMode) {
           await streamDemo(body, send);
         } else {
           await streamDeepSeek(body, send);
@@ -57,12 +56,12 @@ export async function POST(request: Request) {
 }
 
 async function streamDeepSeek(body: ChatRequest, send: (payload: unknown) => void) {
-  const apiKey = body.settings.apiKey || process.env.DEEPSEEK_API_KEY;
-  const baseUrl = body.settings.baseUrl || process.env.DEEPSEEK_BASE_URL || "https://api.deepseek.com";
-  const model = body.settings.model || process.env.DEEPSEEK_MODEL || "deepseek-chat";
+  const apiKey = process.env.DEEPSEEK_API_KEY;
+  const baseUrl = process.env.DEEPSEEK_BASE_URL || "https://api.deepseek.com";
+  const model = process.env.DEEPSEEK_MODEL || "deepseek-chat";
 
   if (!apiKey) {
-    throw new Error("DeepSeek API Key 未配置。请在 Settings 中填写，或开启 Demo 模式。");
+    throw new Error("服务端未配置 DeepSeek API Key。请在 `.env.local` 或 Vercel Environment Variables 中设置。");
   }
 
   send({ type: "trace", label: "连接 DeepSeek，使用 SSE 流式生成" });

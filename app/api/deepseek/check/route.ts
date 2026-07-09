@@ -1,14 +1,12 @@
-import type { SettingsState } from "@/types/agent";
-
 export const runtime = "nodejs";
 
 export async function POST(request: Request) {
-  const settings = (await request.json()) as SettingsState;
-  const apiKey = settings.apiKey || process.env.DEEPSEEK_API_KEY;
-  const baseUrl = settings.baseUrl || process.env.DEEPSEEK_BASE_URL || "https://api.deepseek.com";
+  void request;
+  const apiKey = process.env.DEEPSEEK_API_KEY;
+  const baseUrl = process.env.DEEPSEEK_BASE_URL || "https://api.deepseek.com";
 
   if (!apiKey) {
-    return Response.json({ ok: false, message: "API Key 为空。" });
+    return Response.json({ ok: false, message: "服务端未配置 DeepSeek API Key，请检查 `.env.local` 或 Vercel Environment Variables。" });
   }
 
   try {
@@ -18,7 +16,7 @@ export async function POST(request: Request) {
       }
     });
     if (!response.ok) {
-      return Response.json({ ok: false, message: `DeepSeek 返回 ${response.status}，请检查 Key 或 Base URL。` });
+      return Response.json({ ok: false, message: `DeepSeek 返回 ${response.status}，请检查服务端环境变量是否正确。` });
     }
     return Response.json({ ok: true, message: "DeepSeek 连接成功。" });
   } catch {

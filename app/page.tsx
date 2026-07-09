@@ -80,6 +80,7 @@ export default function WorkspacePage() {
     setMessages(nextMessages);
     setInput("");
     setAttachments([]);
+    setArtifact(null);
 
     const mergedContext = mergeContextFromInput(context, trimmed, readyAttachments);
     if (artifact?.type === "interview") {
@@ -96,7 +97,7 @@ export default function WorkspacePage() {
       const clarifyArtifact: ClarifyArtifact = {
         type: "clarify",
         title: "需要补充素材",
-        missing: decision.missing.map(materialLabel),
+        missing: decision.missing.length ? decision.missing.map(materialLabel) : ["任务类型未指明"],
         nextQuestion: message
       };
       setArtifact(clarifyArtifact);
@@ -144,7 +145,7 @@ export default function WorkspacePage() {
           input: userInput,
           context: nextContext,
           transcript: messagesToTranscript(nextMessages),
-          settings: loadSettings()
+          demoMode: loadSettings().demoMode
         })
       });
 

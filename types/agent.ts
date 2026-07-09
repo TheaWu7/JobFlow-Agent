@@ -147,11 +147,7 @@ export interface HistoryRecord {
 }
 
 export interface SettingsState {
-  apiKey: string;
-  baseUrl: string;
   demoMode: boolean;
-  modelProvider: "deepseek";
-  model: string;
 }
 
 export type StreamEvent =

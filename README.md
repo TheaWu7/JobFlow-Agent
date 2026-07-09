@@ -11,7 +11,7 @@
 - DeepSeek SSE 服务端代理
 - Demo 模式，无 API Key 也可演示完整流程
 - 本地 History，只读查看历史结果
-- Settings 配置 DeepSeek API Key、Base URL、模型和 Demo 模式
+- Settings 仅保留 Demo 模式和连接状态提示
 
 ## Tech Stack
 
@@ -36,8 +36,8 @@ npm run dev
 1. 推送到 GitHub。
 2. 在 Vercel 导入项目。
 3. 使用默认 Next.js 构建配置即可。
-4. 可选配置环境变量 `DEEPSEEK_API_KEY`、`DEEPSEEK_BASE_URL`、`DEEPSEEK_MODEL`。
-5. API Key 也可以在应用 Settings 页面录入，默认保存到当前浏览器 localStorage。
+4. 配置环境变量 `DEEPSEEK_API_KEY`、`DEEPSEEK_BASE_URL`、`DEEPSEEK_MODEL`。
+5. 不再在网页里输入 API Key，Settings 里只保留 Demo 模式。
 
 ## Demo Flow
 
@@ -55,3 +55,4 @@ npm run dev
 - 文件上传只是素材输入入口，业务任务仍由聊天自然语言触发。
 - 真实模型模式通过 `/api/chat` 转发 DeepSeek SSE，避免把 API Key 写入仓库。
 - `.pdf` 和 `.docx` 在客户端解析为文本后进入 Agent 上下文。
+- 本地开发请使用 `.env.local`，不要把真实密钥提交到仓库。
