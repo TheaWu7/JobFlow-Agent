@@ -1,12 +1,8 @@
-import type { Metadata } from "next";
+"use client";
+
 import Link from "next/link";
 import { BriefcaseBusiness, History, Settings } from "lucide-react";
 import "./globals.css";
-
-export const metadata: Metadata = {
-  title: "InterviewFlow-AI",
-  description: "Single-entry agent workspace for interview preparation."
-};
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (

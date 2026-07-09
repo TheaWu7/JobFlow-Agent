@@ -129,7 +129,8 @@ export function taskLabel(task: TaskType) {
     interview_answer: "面试作答点评",
     interview_review: "面试智能复盘",
     project_deep_dive: "项目深度打磨",
-    clarify: "上下文补全"
+    clarify: "上下文补全",
+    unknown: "自动识别任务类型"
   };
   return labels[task];
 }
@@ -182,15 +183,31 @@ function looksLikeNewTask(input: string) {
 }
 
 function looksLikeJd(text: string) {
-  return /(岗位职责|任职要求|职位描述|JD|job description|requirements|responsibilities)/i.test(text);
+  if (/(岗位职责|任职要求|职位描述|JD|job description|requirements|responsibilities)/i.test(text)) return true;
+  const lines = text.split('\n').filter(Boolean);
+  if (lines.length < 3 || lines.length > 60) return false;
+  const colonLines = lines.filter((l) => /[:：]/.test(l)).length;
+  const hasNumericRequirements = /[0-9]+(年|年以上|months|day)/i.test(text);
+  const hasSkills = /(熟练|精通|熟悉|掌握|react|vue|node|python|java|html|css)/i.test(text);
+  return (colonLines > 2 && hasSkills) || (hasNumericRequirements && colonLines > 1);
 }
 
 function looksLikeResume(text: string) {
-  return /(教育经历|工作经历|项目经历|专业技能|个人简历|resume|curriculum vitae|experience)/i.test(text);
+  if (/(教育经历|工作经历|项目经历|专业技能|个人简历|resume|curriculum vitae|experience)/i.test(text)) return true;
+  const lines = text.split('\n').filter(Boolean);
+  if (lines.length < 5) return false;
+  const hasTime = /(20[0-9]{2}[\s.-]*年|[0-9]{4}\s*[-~]\s*[0-9]{4}|至今|present|现在)/i.test(text);
+  const hasJobTitle = /(工程师|经理|主管|负责|协调|参与|实习|助理|intern|developer|engineer)/i.test(text);
+  return hasTime && hasJobTitle;
 }
 
 function looksLikeProject(text: string) {
-  return /(项目背景|技术栈|项目职责|项目成果|STAR|负责.*项目|项目经历)/i.test(text);
+  if (/(项目背景|技术栈|项目职责|项目成果|STAR|负责.*项目|项目经历)/i.test(text)) return true;
+  const lines = text.split('\n').filter(Boolean);
+  if (lines.length < 3) return false;
+  const hasTech = /(react|vue|next|node|python|java|数据库|架构|前端|后端|全栈)/i.test(text);
+  const hasAction = /(负责|搭建|设计|开发|优化|实现|重构|主导|参与|独立)/i.test(text);
+  return hasTech && hasAction;
 }
 
 function selectLonger(current: string | undefined, incoming: string) {

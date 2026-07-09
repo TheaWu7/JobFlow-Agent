@@ -15,6 +15,7 @@ import {
 import { readFiles } from "@/lib/file-reader";
 import { saveArtifactToHistory } from "@/lib/history";
 import { loadSettings } from "@/lib/settings";
+import { clearWorkspaceDraft, loadWorkspaceDraft, saveWorkspaceDraft } from "@/lib/workspace-state";
 import { cn, uid } from "@/lib/utils";
 import type {
   AgentTraceStep,
@@ -29,14 +30,7 @@ import type {
 } from "@/types/agent";
 
 export default function WorkspacePage() {
-  const [messages, setMessages] = useState<ChatMessage[]>([
-    {
-      id: uid("msg"),
-      role: "assistant",
-      content: "你好，我是 InterviewFlow-AI。直接告诉我你要做什么，或粘贴 JD、简历、项目材料，我会自动判断任务并在右侧生成结果。",
-      createdAt: new Date().toISOString()
-    }
-  ]);
+  const [messages, setMessages] = useState<ChatMessage[]>([]);
   const [input, setInput] = useState("");
   const [attachments, setAttachments] = useState<UploadedAttachment[]>([]);
   const [context, setContext] = useState<WorkspaceContext>({});
@@ -49,7 +43,60 @@ export default function WorkspacePage() {
   const scrollRef = useRef<HTMLDivElement>(null);
 
   const activeInterview = artifact?.type === "interview" && artifact.status === "in_progress";
-  const readyAttachments = useMemo(() => attachments.filter((item) => item.status === "ready"), [attachments]);
+  const readyAttachments = useMemo(
+    () => attachments.filter((item) => item.status === "ready"),
+    [attachments]
+  );
+
+  useEffect(() => {
+    const draft = loadWorkspaceDraft();
+    if (draft.messages.length) {
+      setMessages(draft.messages);
+    } else {
+      setMessages([
+        {
+          id: uid("msg"),
+          role: "assistant",
+          content:
+            "你好，我是 InterviewFlow-AI。直接告诉我你要做什么，或粘贴 JD、简历、项目材料，我会自动判断任务并在右侧生成结果。",
+          createdAt: new Date().toISOString(),
+        },
+      ]);
+    }
+    setInput(draft.input);
+    setAttachments(draft.attachments);
+    setContext(draft.context);
+    setArtifact(draft.artifact);
+    setTrace(draft.trace);
+    setPendingTask(draft.pendingTask);
+
+    const sync = () => {
+      const draft = loadWorkspaceDraft();
+      setMessages(draft.messages.length ? draft.messages : []);
+      setInput(draft.input);
+      setAttachments(draft.attachments);
+      setContext(draft.context);
+      setArtifact(draft.artifact);
+      setTrace(draft.trace);
+      setPendingTask(draft.pendingTask);
+    };
+    window.addEventListener("interviewflow-workspace-updated", sync);
+    return () => window.removeEventListener("interviewflow-workspace-updated", sync);
+  }, []);
+
+  useEffect(() => {
+    if (typeof window === "undefined") return;
+    if (!messages.length) return;
+    saveWorkspaceDraft({
+      messages,
+      input,
+      attachments,
+      context,
+      artifact,
+      trace,
+      pendingTask,
+    });
+  }, [messages, input, attachments, context, artifact, trace, pendingTask]);
 
   useEffect(() => {
     scrollRef.current?.scrollTo({ top: scrollRef.current.scrollHeight, behavior: "smooth" });
@@ -193,7 +240,13 @@ export default function WorkspacePage() {
     if (eventData.type === "artifact") {
       setArtifact(eventData.artifact);
       if (eventData.artifact.type === "interview") {
-        setContext((current) => ({ ...current, interview: eventData.artifact as InterviewArtifact }));
+        setContext((current) => ({
+          ...current,
+          interview: eventData.artifact as InterviewArtifact,
+        }));
+      }
+      if (eventData.detectedTask) {
+        setContext((current) => ({ ...current, lastTask: eventData.detectedTask as TaskType }));
       }
       if (eventData.artifact.type !== "clarify") {
         saveArtifactToHistory(eventData.artifact, historySummary(eventData.artifact));
@@ -237,11 +290,30 @@ export default function WorkspacePage() {
 
       <section className={cn("min-h-[calc(100vh-6rem)] rounded-lg border border-line bg-white shadow-soft lg:flex lg:flex-col", mobileView === "artifact" && "hidden lg:flex")}>
         <div className="border-b border-line p-4">
-          <div className="flex items-center gap-2">
-            <Sparkles className="h-5 w-5 text-brand" />
-            <h1 className="text-lg font-semibold">Agent Workspace</h1>
+          <div className="flex items-center justify-between">
+            <div className="flex items-center gap-2">
+              <Sparkles className="h-5 w-5 text-brand" />
+              <h1 className="text-lg font-semibold">Agent Workspace</h1>
+            </div>
+            <button
+              className="flex h-8 w-8 items-center justify-center rounded-md border border-transparent text-muted hover:border-line hover:bg-panel hover:text-accent"
+              type="button"
+              title="清空对话，重新开始"
+              onClick={() => {
+                try {
+                  window.localStorage.removeItem("interviewflow.workspace.v1");
+                  if (typeof window !== "undefined") {
+                    window.dispatchEvent(new Event("interviewflow-workspace-updated"));
+                  }
+                } catch {}
+              }}
+            >
+              <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><polyline points="1 4 1 10 7 10"/><path d="M3.51 15a9 9 0 1 0 2.13-9.36L1 10"/></svg>
+            </button>
           </div>
-          <p className="mt-1 text-sm text-muted">自然语言是唯一业务入口；Agent 自动识别任务、补齐素材并生成右侧结果。</p>
+          <p className="mt-1 text-sm text-muted">
+            自然语言是唯一业务入口；Agent 自动识别任务、补齐素材并生成右侧结果。
+          </p>
         </div>
 
         <div ref={scrollRef} className="h-[46vh] space-y-3 overflow-y-auto p-4 lg:flex-1">

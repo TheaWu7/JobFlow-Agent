@@ -4,8 +4,8 @@ export type TaskType =
   | "interview_answer"
   | "interview_review"
   | "project_deep_dive"
-  | "clarify";
-
+  | "clarify"
+  | "unknown";
 export type ArtifactType =
   | "empty"
   | "resume"
@@ -44,6 +44,7 @@ export interface WorkspaceContext {
   resume?: string;
   project?: string;
   interview?: InterviewArtifact;
+  lastTask?: TaskType;
 }
 
 export interface AgentDecision {
@@ -153,6 +154,6 @@ export interface SettingsState {
 export type StreamEvent =
   | { type: "trace"; label: string }
   | { type: "delta"; text: string }
-  | { type: "artifact"; artifact: Artifact }
+  | { type: "artifact"; artifact: Artifact; detectedTask?: string | null }
   | { type: "error"; message: string }
   | { type: "done" };

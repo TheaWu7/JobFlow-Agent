@@ -125,10 +125,10 @@ async function streamDeepSeek(body: ChatRequest, send: (payload: unknown) => voi
     }
   }
 
-  const parsed = parseModelArtifact(accumulated);
-  if (parsed) {
+  const { artifact: parsedArtifact, detectedTask } = parseModelArtifact(accumulated);
+  if (parsedArtifact) {
     send({ type: "trace", label: "结构化 Artifact 解析完成" });
-    send({ type: "artifact", artifact: parsed });
+    send({ type: "artifact", artifact: parsedArtifact, detectedTask: detectedTask ?? null });
   } else {
     send({ type: "trace", label: "模型未返回标准 JSON，已保留聊天文本" });
   }
@@ -146,6 +146,14 @@ async function streamDemo(body: ChatRequest, send: (payload: unknown) => void) {
 }
 
 function buildSystemPrompt(task: TaskType) {
+  if (task === "unknown") {
+    return `你是 InterviewFlow-AI，一个垂直求职场景 Agent。
+必须用中文输出。
+先做两件事：
+1. 判断用户属于哪一类任务：resume_optimize、mock_interview 还是 interview_answer、interview_review、project_deep_dive。
+2. 输出 formatJson: {"detectedTask": "任务类型", "artifact": {结构化 Artifact}}
+可以按实际上下文选择最合适的任务，但不能编造材料。`;
+  }
   return `你是 InterviewFlow-AI，一个垂直求职场景 Agent。
 必须用中文输出。你正在执行任务：${task}。
 先给用户一段自然、简洁、可流式阅读的说明，然后在最后输出一个 fenced JSON：
@@ -183,13 +191,20 @@ ${body.transcript}
 - project: {type,title,star:{situation,task,action,result},pitchScript,followUps:[{question,answerFrame}],riskPoints}`;
 }
 
-function parseModelArtifact(raw: string): Artifact | null {
-  const parsed = safeJsonParse<{ artifact?: Artifact }>(raw);
+function parseModelArtifact(raw: string): { artifact: Artifact | null; detectedTask?: string } {
+  const parsed = safeJsonParse<{ artifact?: Artifact; detectedTask?: string }>(raw);
   if (parsed?.artifact?.type) {
-    return parsed.artifact;
+    return { artifact: parsed.artifact, detectedTask: parsed.detectedTask };
   }
   const direct = safeJsonParse<Artifact>(raw);
-  return direct?.type ? direct : null;
+  if (direct?.type) {
+    return { artifact: direct };
+  }
+  const nested = safeJsonParse<{ detectedTask?: string; artifact?: Artifact }>(raw);
+  if (nested?.artifact?.type) {
+    return { artifact: nested.artifact, detectedTask: nested.detectedTask };
+  }
+  return { artifact: null };
 }
 
 function demoMessage(task: TaskType) {
@@ -199,7 +214,8 @@ function demoMessage(task: TaskType) {
     interview_answer: "收到你的回答。我先给出即时点评，并根据当前题目决定是否进行一次追问。",
     interview_review: "我已读取最近一轮面试记录，正在输出维度评分、短板标签和练习建议。",
     project_deep_dive: "我已把项目材料整理成 STAR 口述脚本，并补充了高频追问和参考作答框架。",
-    clarify: "我还需要补齐关键材料，才能继续生成可靠结果。"
+    clarify: "我还需要补齐关键材料，才能继续生成可靠结果。",
+    unknown: "我先理解一下你的需求，然后自动选择最合适的任务来生成结果。"
   };
   return messages[task];
 }
