@@ -127,7 +127,6 @@ export default function WorkspacePage() {
     setMessages(nextMessages);
     setInput("");
     setAttachments([]);
-    setArtifact(null);
 
     const mergedContext = mergeContextFromInput(context, trimmed, readyAttachments);
     if (artifact?.type === "interview") {
@@ -138,6 +137,8 @@ export default function WorkspacePage() {
     const effectiveInput = pendingTask ? `${taskLabel(pendingTask)}\n${trimmed}` : trimmed;
     const decision = decideTask(effectiveInput, mergedContext, activeInterview);
     setTrace(createTrace(decision));
+
+    console.log("[handleSubmit] decision.task:", decision.task, "intendedTask:", decision.intendedTask, "missing:", decision.missing, "pendingTask:", pendingTask);
 
     if (decision.task === "clarify") {
       const message = buildClarifyMessage(decision.missing, decision.intendedTask);
@@ -161,6 +162,8 @@ export default function WorkspacePage() {
       return;
     }
 
+    // 只有在非 clarify 路径才清除旧 artifact，并立即显示一个 loading 状态
+    setArtifact(null);
     setPendingTask(null);
     await runAgent(decision.task, trimmed || effectiveInput, mergedContext, nextMessages);
   }
@@ -225,6 +228,13 @@ export default function WorkspacePage() {
       const message = error instanceof Error ? error.message : "Agent 执行失败";
       appendAssistantDelta(assistantId, `\n${message}`);
       setTrace((current) => markLastTrace(current, "error"));
+      // API 失败时也设置一个 clarify artifact，避免页面显示空白或旧数据
+      setArtifact({
+        type: "clarify",
+        title: "请求失败",
+        missing: [],
+        nextQuestion: `调用模型服务时出错：${message}。请检查 API Key 配置或稍后重试。`
+      });
     } finally {
       setIsStreaming(false);
     }
