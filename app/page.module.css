@@ -215,6 +215,33 @@
   color: var(--color-muted);
 }
 
+.traceListWrapper {
+  position: relative;
+}
+
+.traceListWrapper::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 18px;
+  pointer-events: none;
+  z-index: 1;
+  background: linear-gradient(to bottom, var(--color-panel), transparent);
+}
+
+.traceList {
+  max-height: calc(1.5 * 1.125rem + var(--space-2));
+  overflow-y: auto;
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+}
+
+.traceList::-webkit-scrollbar {
+  display: none;
+}
+
 .traceList > * + * {
   margin-top: var(--space-2);
 }
