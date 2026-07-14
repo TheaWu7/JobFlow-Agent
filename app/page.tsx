@@ -2,7 +2,7 @@
 
 import { FormEvent, useEffect, useMemo, useRef, useState } from "react";
 import { Loader2, Paperclip, Send, Sparkles, UploadCloud } from "lucide-react";
-import { ArtifactPanel } from "@/components/artifact-panel";
+import { ArtifactPanel } from "@/components/ArtifactPanel";
 import {
   buildClarifyMessage,
   createTrace,
@@ -12,10 +12,10 @@ import {
   messagesToTranscript,
   taskLabel
 } from "@/lib/agent";
-import { readFiles } from "@/lib/file-reader";
+import { readFiles } from "@/lib/fileReader";
 import { saveArtifactToHistory } from "@/lib/history";
 import { loadSettings } from "@/lib/settings";
-import { clearWorkspaceDraft, loadWorkspaceDraft, saveWorkspaceDraft } from "@/lib/workspace-state";
+import { clearWorkspaceDraft, loadWorkspaceDraft, saveWorkspaceDraft } from "@/lib/workspaceState";
 import { cn, uid } from "@/lib/utils";
 import type {
   AgentTraceStep,
