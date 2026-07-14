@@ -191,19 +191,39 @@ ${body.transcript}
 - project: {type,title,star:{situation,task,action,result},pitchScript,followUps:[{question,answerFrame}],riskPoints}`;
 }
 
+const VALID_ARTIFACT_TYPES = ["resume", "interview", "review", "project", "clarify"];
+
 function parseModelArtifact(raw: string): { artifact: Artifact | null; detectedTask?: string } {
-  const parsed = safeJsonParse<{ artifact?: Artifact; detectedTask?: string }>(raw);
-  if (parsed?.artifact?.type) {
-    return { artifact: parsed.artifact, detectedTask: parsed.detectedTask };
+  // 策略1: { artifact: { type: "resume", ... }, detectedTask?: "..." }
+  const wrapped = safeJsonParse<{ artifact?: Artifact; detectedTask?: string }>(raw);
+  if (wrapped?.artifact?.type && VALID_ARTIFACT_TYPES.includes(wrapped.artifact.type)) {
+    return { artifact: wrapped.artifact, detectedTask: wrapped.detectedTask };
   }
+
+  // 策略2: 直接就是 artifact { type: "resume", ... }
   const direct = safeJsonParse<Artifact>(raw);
-  if (direct?.type) {
+  if (direct?.type && VALID_ARTIFACT_TYPES.includes(direct.type)) {
     return { artifact: direct };
   }
+
+  // 策略3: { detectedTask?: "...", artifact: { type: "resume", ... } }
   const nested = safeJsonParse<{ detectedTask?: string; artifact?: Artifact }>(raw);
-  if (nested?.artifact?.type) {
+  if (nested?.artifact?.type && VALID_ARTIFACT_TYPES.includes(nested.artifact.type)) {
     return { artifact: nested.artifact, detectedTask: nested.detectedTask };
   }
+
+  // 策略4: 模型把多个 artifact 塞到一个对象里 (如 { resume: {...}, interview: {...} })
+  // 按优先级取第一个有效的子 artifact
+  const multi = safeJsonParse<Record<string, unknown>>(raw);
+  if (multi && typeof multi === "object") {
+    for (const key of VALID_ARTIFACT_TYPES) {
+      const candidate = multi[key];
+      if (candidate && typeof candidate === "object" && (candidate as Artifact).type === key) {
+        return { artifact: candidate as Artifact, detectedTask: multi.detectedTask as string | undefined };
+      }
+    }
+  }
+
   return { artifact: null };
 }
 
