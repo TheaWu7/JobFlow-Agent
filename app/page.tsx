@@ -280,7 +280,7 @@ export default function WorkspacePage() {
   }
 
   return (
-    <main className="mx-auto grid max-w-7xl gap-4 px-4 py-4 sm:px-6 lg:grid-cols-[minmax(360px,0.92fr)_minmax(520px,1.08fr)]">
+    <main className="h-[calc(100vh-3.5rem)] overflow-hidden mx-auto grid max-w-7xl gap-4 px-4 py-4 sm:px-6 lg:grid-cols-[minmax(360px,0.92fr)_minmax(520px,1.08fr)]">
       <div className="flex gap-2 lg:hidden">
         <button
           className={cn("h-10 flex-1 rounded-md border text-sm", mobileView === "chat" ? "border-brand bg-white text-brand" : "border-line bg-panel text-muted")}
@@ -298,7 +298,7 @@ export default function WorkspacePage() {
         </button>
       </div>
 
-      <section className={cn("min-h-[calc(100vh-6rem)] rounded-lg border border-line bg-white shadow-soft lg:flex lg:flex-col", mobileView === "artifact" && "hidden lg:flex")}>
+      <section className={cn("min-h-0 h-full rounded-lg border border-line bg-white shadow-soft lg:flex lg:flex-col", mobileView === "artifact" && "hidden lg:flex")}>
         <div className="border-b border-line p-4">
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-2">
@@ -401,7 +401,7 @@ export default function WorkspacePage() {
         </form>
       </section>
 
-      <aside className={cn("min-h-[calc(100vh-6rem)] overflow-y-auto lg:block", mobileView === "chat" && "hidden lg:block")}>
+      <aside className={cn("min-h-0 h-full overflow-y-auto lg:block", mobileView === "chat" && "hidden lg:block")}>
         <ArtifactPanel artifact={artifact} />
       </aside>
     </main>
