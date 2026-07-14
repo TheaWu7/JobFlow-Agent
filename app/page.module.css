@@ -207,12 +207,47 @@
   padding: var(--space-3) var(--space-4);
 }
 
+.traceCollapsed {
+  padding: var(--space-2) var(--space-4);
+}
+
+.traceHeader {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: var(--space-2);
+}
+
+.traceCollapsed .traceHeader {
+  margin-bottom: 0;
+}
+
 .traceTitle {
-  margin: 0 0 var(--space-2);
+  margin: 0;
   font-size: 0.75rem;
   font-weight: 600;
   text-transform: uppercase;
   color: var(--color-muted);
+}
+
+.traceToggle {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: none;
+  background: none;
+  color: var(--color-muted);
+  cursor: pointer;
+  border-radius: var(--radius-md);
+  transition: transform 0.2s;
+}
+
+.traceToggle:hover {
+  color: var(--color-ink);
+}
+
+.traceToggleCollapsed {
+  transform: rotate(-90deg);
 }
 
 .traceListWrapper {
