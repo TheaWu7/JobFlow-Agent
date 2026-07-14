@@ -18,7 +18,8 @@ export default function HistoryPage() {
 
   return (
     <main className={styles.page}>
-      <div className={styles.header}>
+      <div className={styles.pageInner}>
+        <div className={styles.header}>
         <div>
           <h1 className={styles.title}>History</h1>
           <p className={styles.subtitle}>最近的 JD 解析、简历优化、面试记录和项目脚本。这里只读查看，不发起业务任务。</p>
@@ -64,6 +65,7 @@ export default function HistoryPage() {
           ))}
         </div>
       )}
+      </div>
     </main>
   );
 }

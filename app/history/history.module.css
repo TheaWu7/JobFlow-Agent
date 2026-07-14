@@ -1,11 +1,22 @@
 .page {
+  height: calc(100vh - 3.5rem);
+  overflow-y: auto;
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+}
+
+.page::-webkit-scrollbar {
+  display: none;
+}
+
+.pageInner {
   max-width: 64rem;
   margin: 0 auto;
   padding: var(--space-6) var(--space-4);
 }
 
 @media (min-width: 640px) {
-  .page {
+  .pageInner {
     padding-left: var(--space-6);
     padding-right: var(--space-6);
   }
