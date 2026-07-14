@@ -1,0 +1,128 @@
+.page {
+  max-width: 48rem;
+  margin: 0 auto;
+  padding: var(--space-6) var(--space-4);
+}
+
+@media (min-width: 640px) {
+  .page {
+    padding-left: var(--space-6);
+    padding-right: var(--space-6);
+  }
+}
+
+.header {
+  margin-bottom: var(--space-5);
+}
+
+.title {
+  font-size: 1.25rem;
+  font-weight: 600;
+}
+
+.subtitle {
+  margin-top: var(--space-1);
+  font-size: 0.875rem;
+  color: var(--color-muted);
+}
+
+.section {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-4);
+  border-radius: var(--radius-lg);
+  border: 1px solid var(--color-line);
+  background: white;
+  padding: var(--space-5);
+  box-shadow: var(--shadow-soft);
+}
+
+.toggleRow {
+  display: flex;
+  width: 100%;
+  align-items: center;
+  justify-content: space-between;
+  border-radius: var(--radius-lg);
+  border: 1px solid var(--color-line);
+  background: var(--color-panel);
+  padding: var(--space-3);
+  text-align: left;
+}
+
+.toggleLabel {
+  display: block;
+  font-size: 0.875rem;
+  font-weight: 500;
+}
+
+.toggleHint {
+  margin-top: var(--space-1);
+  display: block;
+  font-size: 0.75rem;
+  color: var(--color-muted);
+}
+
+.toggleIconOn {
+  height: 1.75rem;
+  width: 1.75rem;
+  color: var(--color-brand);
+}
+
+.toggleIconOff {
+  height: 1.75rem;
+  width: 1.75rem;
+  color: var(--color-muted);
+}
+
+.buttonRow {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-2);
+}
+
+.actionButton {
+  display: flex;
+  height: 2.5rem;
+  align-items: center;
+  gap: var(--space-2);
+  border-radius: var(--radius-md);
+  border: 1px solid var(--color-line);
+  background: white;
+  padding: 0 var(--space-4);
+  font-size: 0.875rem;
+  color: var(--color-muted);
+  cursor: pointer;
+}
+
+.actionButton:hover {
+  color: var(--color-ink);
+}
+
+.actionButton:disabled {
+  cursor: not-allowed;
+}
+
+.hint {
+  border-radius: var(--radius-md);
+  background: var(--color-panel);
+  padding: var(--space-2) var(--space-3);
+  font-size: 0.75rem;
+  line-height: 1.5;
+  color: var(--color-muted);
+}
+
+.statusMessage {
+  border-radius: var(--radius-md);
+  padding: var(--space-2) var(--space-3);
+  font-size: 0.875rem;
+}
+
+.statusOk {
+  background: var(--color-brand-10);
+  color: var(--color-brand);
+}
+
+.statusError {
+  background: var(--color-accent-10);
+  color: var(--color-accent);
+}

@@ -28,6 +28,7 @@ import type {
   UploadedAttachment,
   WorkspaceContext
 } from "@/types/agent";
+import styles from "./page.module.css";
 
 export default function WorkspacePage() {
   const [messages, setMessages] = useState<ChatMessage[]>([]);
@@ -162,7 +163,6 @@ export default function WorkspacePage() {
       return;
     }
 
-    // 只有在非 clarify 路径才清除旧 artifact，并立即显示一个 loading 状态
     setArtifact(null);
     setPendingTask(null);
     await runAgent(decision.task, trimmed || effectiveInput, mergedContext, nextMessages);
@@ -228,7 +228,6 @@ export default function WorkspacePage() {
       const message = error instanceof Error ? error.message : "Agent 执行失败";
       appendAssistantDelta(assistantId, `\n${message}`);
       setTrace((current) => markLastTrace(current, "error"));
-      // API 失败时也设置一个 clarify artifact，避免页面显示空白或旧数据
       setArtifact({
         type: "clarify",
         title: "请求失败",
@@ -280,17 +279,18 @@ export default function WorkspacePage() {
   }
 
   return (
-    <main className="h-[calc(100vh-3.5rem)] overflow-hidden mx-auto grid max-w-7xl gap-4 px-4 py-4 sm:px-6 lg:grid-cols-[minmax(360px,0.92fr)_minmax(520px,1.08fr)]">
-      <div className="flex gap-2 lg:hidden">
+    <main className={styles.workspace}>
+      {/* Mobile view toggles */}
+      <div className={styles.mobileTabs}>
         <button
-          className={cn("h-10 flex-1 rounded-md border text-sm", mobileView === "chat" ? "border-brand bg-white text-brand" : "border-line bg-panel text-muted")}
+          className={cn(styles.mobileTab, mobileView === "chat" ? styles.mobileTabActive : styles.mobileTabInactive)}
           onClick={() => setMobileView("chat")}
           type="button"
         >
           Chat
         </button>
         <button
-          className={cn("h-10 flex-1 rounded-md border text-sm", mobileView === "artifact" ? "border-brand bg-white text-brand" : "border-line bg-panel text-muted")}
+          className={cn(styles.mobileTab, mobileView === "artifact" ? styles.mobileTabActive : styles.mobileTabInactive)}
           onClick={() => setMobileView("artifact")}
           type="button"
         >
@@ -298,15 +298,16 @@ export default function WorkspacePage() {
         </button>
       </div>
 
-      <section className={cn("min-h-0 h-full rounded-lg border border-line bg-white shadow-soft lg:flex lg:flex-col", mobileView === "artifact" && "hidden lg:flex")}>
-        <div className="border-b border-line p-4">
-          <div className="flex items-center justify-between">
-            <div className="flex items-center gap-2">
-              <Sparkles className="h-5 w-5 text-brand" />
-              <h1 className="text-lg font-semibold">Agent Workspace</h1>
+      {/* Chat Panel */}
+      <section className={cn(styles.chatPanel, mobileView === "artifact" && styles.chatPanelHidden)}>
+        <div className={styles.chatPanelHeader}>
+          <div className={styles.chatPanelHeaderRow}>
+            <div className={styles.chatPanelTitleGroup}>
+              <Sparkles className={styles.chatPanelIcon} />
+              <h1 className={styles.chatPanelTitle}>Agent Workspace</h1>
             </div>
             <button
-              className="flex h-8 w-8 items-center justify-center rounded-md border border-transparent text-muted hover:border-line hover:bg-panel hover:text-accent"
+              className={styles.resetButton}
               type="button"
               title="清空对话，重新开始"
               onClick={() => {
@@ -321,25 +322,26 @@ export default function WorkspacePage() {
               <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><polyline points="1 4 1 10 7 10"/><path d="M3.51 15a9 9 0 1 0 2.13-9.36L1 10"/></svg>
             </button>
           </div>
-          <p className="mt-1 text-sm text-muted">
+          <p className={styles.chatPanelSubtitle}>
             自然语言是唯一业务入口；Agent 自动识别任务、补齐素材并生成右侧结果。
           </p>
         </div>
 
-        <div ref={scrollRef} className="h-[46vh] space-y-3 overflow-y-auto p-4 lg:flex-1">
+        {/* Messages */}
+        <div ref={scrollRef} className={styles.messagesArea}>
           {messages.map((message) => (
-            <div key={message.id} className={cn("flex", message.role === "user" ? "justify-end" : "justify-start")}>
+            <div key={message.id} className={cn(styles.messageRow, message.role === "user" ? styles.messageRowUser : styles.messageRowAssistant)}>
               <div
                 className={cn(
-                  "max-w-[88%] rounded-lg px-4 py-3 text-sm leading-6",
-                  message.role === "user" ? "bg-brand text-white" : "bg-panel text-ink"
+                  styles.messageBubble,
+                  message.role === "user" ? styles.messageBubbleUser : styles.messageBubbleAssistant
                 )}
               >
-                <p className="whitespace-pre-wrap">{message.content || (isStreaming ? " " : "")}</p>
+                <p className={styles.messageText}>{message.content || (isStreaming ? " " : "")}</p>
                 {message.attachments?.length ? (
-                  <div className="mt-2 space-y-1">
+                  <div className={styles.attachmentList}>
                     {message.attachments.map((file) => (
-                      <div key={file.id} className="rounded-md bg-white/15 px-2 py-1 text-xs">
+                      <div key={file.id} className={styles.attachmentItem}>
                         {file.name} · {file.status === "ready" ? "已读取" : file.error}
                       </div>
                     ))}
@@ -352,21 +354,22 @@ export default function WorkspacePage() {
 
         <TraceList trace={trace} />
 
-        <form onSubmit={handleSubmit} className="border-t border-line p-4">
+        {/* Input Form */}
+        <form onSubmit={handleSubmit} className={styles.inputForm}>
           {attachments.length > 0 && (
-            <div className="mb-3 flex flex-wrap gap-2">
+            <div className={styles.attachmentPreview}>
               {attachments.map((file) => (
-                <span key={file.id} className={cn("rounded-md border px-2 py-1 text-xs", file.status === "ready" ? "border-brand/30 bg-brand/10 text-brand" : "border-accent/30 bg-accent/10 text-accent")}>
+                <span key={file.id} className={cn(styles.attachmentChip, file.status === "ready" ? styles.attachmentChipReady : styles.attachmentChipError)}>
                   {file.name}
                 </span>
               ))}
             </div>
           )}
-          <div className="flex items-end gap-2">
-            <label className="flex h-11 w-11 shrink-0 cursor-pointer items-center justify-center rounded-md border border-line bg-panel text-muted hover:text-ink" title="上传素材">
-              {isReadingFiles ? <Loader2 className="h-4 w-4 animate-spin" /> : <Paperclip className="h-4 w-4" />}
+          <div className={styles.inputRow}>
+            <label className={styles.fileUploadButton} title="上传素材">
+              {isReadingFiles ? <Loader2 size={16} className="animate-spin" /> : <Paperclip size={16} />}
               <input
-                className="hidden"
+                className={styles.fileInput}
                 type="file"
                 multiple
                 accept=".txt,.md,.pdf,.docx"
@@ -374,7 +377,7 @@ export default function WorkspacePage() {
               />
             </label>
             <textarea
-              className="max-h-36 min-h-11 flex-1 resize-none rounded-md border border-line bg-white px-3 py-2 text-sm outline-none focus:border-brand"
+              className={styles.textarea}
               placeholder="例如：帮我针对这个前端 JD 优化简历，然后粘贴 JD 和简历内容..."
               value={input}
               onChange={(event) => setInput(event.target.value)}
@@ -386,22 +389,23 @@ export default function WorkspacePage() {
               }}
             />
             <button
-              className="flex h-11 w-11 shrink-0 items-center justify-center rounded-md bg-brand text-white hover:bg-brand/90 disabled:cursor-not-allowed disabled:bg-muted"
+              className={styles.sendButton}
               type="submit"
               disabled={isStreaming || isReadingFiles}
               title="发送"
             >
-              {isStreaming ? <Loader2 className="h-4 w-4 animate-spin" /> : <Send className="h-4 w-4" />}
+              {isStreaming ? <Loader2 size={16} className="animate-spin" /> : <Send size={16} />}
             </button>
           </div>
-          <div className="mt-2 flex items-center gap-2 text-xs text-muted">
-            <UploadCloud className="h-3.5 w-3.5" />
+          <div className={styles.inputFooter}>
+            <UploadCloud className={styles.footerIcon} />
             支持 txt、md、pdf、docx；业务任务仍由聊天内容触发。
           </div>
         </form>
       </section>
 
-      <aside className={cn("min-h-0 h-full overflow-y-auto lg:block", mobileView === "chat" && "hidden lg:block")}>
+      {/* Artifact Aside */}
+      <aside className={cn(styles.artifactAside, mobileView === "chat" && styles.artifactAsideHidden)}>
         <ArtifactPanel artifact={artifact} />
       </aside>
     </main>
@@ -411,18 +415,18 @@ export default function WorkspacePage() {
 function TraceList({ trace }: { trace: AgentTraceStep[] }) {
   if (!trace.length) return null;
   return (
-    <div className="border-t border-line bg-panel/60 px-4 py-3">
-      <p className="mb-2 text-xs font-semibold uppercase text-muted">Agent Trace</p>
-      <div className="space-y-2">
+    <div className={styles.trace}>
+      <p className={styles.traceTitle}>Agent Trace</p>
+      <div className={styles.traceList}>
         {trace.map((item) => (
-          <div key={item.id} className="flex items-center gap-2 text-xs text-muted">
+          <div key={item.id} className={styles.traceItem}>
             <span
               className={cn(
-                "h-2 w-2 rounded-full",
-                item.status === "done" && "bg-brand",
-                item.status === "running" && "bg-note",
-                item.status === "pending" && "bg-line",
-                item.status === "error" && "bg-accent"
+                styles.traceDot,
+                item.status === "done" && styles.traceDotDone,
+                item.status === "running" && styles.traceDotRunning,
+                item.status === "pending" && styles.traceDotPending,
+                item.status === "error" && styles.traceDotError
               )}
             />
             <span>{item.label}</span>
