@@ -1,7 +1,8 @@
+"use client";
+
 import type {
   AgentDecision,
   AgentTraceStep,
-  Artifact,
   ArtifactType,
   ChatMessage,
   TaskType,
@@ -214,17 +215,4 @@ function selectLonger(current: string | undefined, incoming: string) {
     return incoming.slice(0, 24000);
   }
   return current;
-}
-
-export function markLastTrace(trace: AgentTraceStep[], status: AgentTraceStep["status"]) {
-  if (!trace.length) return trace;
-  return trace.map((item, index) => (index === trace.length - 1 ? { ...item, status } : item));
-}
-
-export function historySummary(artifact: Artifact) {
-  if (artifact.type === "resume") return `匹配度 ${artifact.matchScore}，${artifact.optimizations.length} 条优化建议`;
-  if (artifact.type === "interview") return `${artifact.questions.length} 道题，状态：${artifact.status}`;
-  if (artifact.type === "review") return `综合评分 ${artifact.overallScore}，${artifact.weaknessTags.length} 个短板标签`;
-  if (artifact.type === "project") return `${artifact.followUps.length} 个高频追问，${artifact.riskPoints.length} 个风险点`;
-  return artifact.title;
 }
