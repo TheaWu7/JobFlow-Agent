@@ -1,8 +1,12 @@
 "use client";
 
 import { FormEvent, useEffect, useMemo, useRef, useState } from "react";
-import { Loader2, Paperclip, Send, Sparkles, UploadCloud } from "lucide-react";
+import { Sparkles } from "lucide-react";
 import { ArtifactPanel } from "@/components/ArtifactPanel";
+import { ChatInput } from "@/components/ChatInput";
+import { ChatPanelHeader } from "@/components/ChatPanelHeader";
+import { MessageList } from "@/components/MessageList";
+import { TraceList } from "@/components/TraceList";
 import {
   buildClarifyMessage,
   createTrace,
@@ -49,6 +53,7 @@ export default function WorkspacePage() {
     [attachments]
   );
 
+  // ── draft persistence ──
   useEffect(() => {
     const draft = loadWorkspaceDraft();
     if (draft.messages.length) {
@@ -103,6 +108,7 @@ export default function WorkspacePage() {
     scrollRef.current?.scrollTo({ top: scrollRef.current.scrollHeight, behavior: "smooth" });
   }, [messages, isStreaming]);
 
+  // ── handlers ──
   async function handleFileChange(files: FileList | null) {
     if (!files?.length) return;
     setIsReadingFiles(true);
@@ -139,8 +145,6 @@ export default function WorkspacePage() {
     const decision = decideTask(effectiveInput, mergedContext, activeInterview);
     setTrace(createTrace(decision));
 
-    console.log("[handleSubmit] decision.task:", decision.task, "intendedTask:", decision.intendedTask, "missing:", decision.missing, "pendingTask:", pendingTask);
-
     if (decision.task === "clarify") {
       const message = buildClarifyMessage(decision.missing, decision.intendedTask);
       const clarifyArtifact: ClarifyArtifact = {
@@ -166,6 +170,15 @@ export default function WorkspacePage() {
     setArtifact(null);
     setPendingTask(null);
     await runAgent(decision.task, trimmed || effectiveInput, mergedContext, nextMessages);
+  }
+
+  function handleReset() {
+    try {
+      clearWorkspaceDraft();
+      if (typeof window !== "undefined") {
+        window.dispatchEvent(new Event("interviewflow-workspace-updated"));
+      }
+    } catch {}
   }
 
   async function runAgent(
@@ -278,6 +291,7 @@ export default function WorkspacePage() {
     );
   }
 
+  // ── render ──
   return (
     <main className={styles.workspace}>
       {/* Mobile view toggles */}
@@ -300,108 +314,25 @@ export default function WorkspacePage() {
 
       {/* Chat Panel */}
       <section className={cn(styles.chatPanel, mobileView === "artifact" && styles.chatPanelHidden)}>
-        <div className={styles.chatPanelHeader}>
-          <div className={styles.chatPanelHeaderRow}>
-            <div className={styles.chatPanelTitleGroup}>
-              <Sparkles className={styles.chatPanelIcon} />
-              <h1 className={styles.chatPanelTitle}>Agent Workspace</h1>
-            </div>
-            <button
-              className={styles.resetButton}
-              type="button"
-              title="清空对话，重新开始"
-              onClick={() => {
-                try {
-                  window.localStorage.removeItem("interviewflow.workspace.v1");
-                  if (typeof window !== "undefined") {
-                    window.dispatchEvent(new Event("interviewflow-workspace-updated"));
-                  }
-                } catch {}
-              }}
-            >
-              <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><polyline points="1 4 1 10 7 10"/><path d="M3.51 15a9 9 0 1 0 2.13-9.36L1 10"/></svg>
-            </button>
-          </div>
-          <p className={styles.chatPanelSubtitle}>
-            自然语言是唯一业务入口；Agent 自动识别任务、补齐素材并生成右侧结果。
-          </p>
-        </div>
+        <ChatPanelHeader onReset={handleReset} />
 
         {/* Messages */}
         <div ref={scrollRef} className={styles.messagesArea}>
-          {messages.map((message) => (
-            <div key={message.id} className={cn(styles.messageRow, message.role === "user" ? styles.messageRowUser : styles.messageRowAssistant)}>
-              <div
-                className={cn(
-                  styles.messageBubble,
-                  message.role === "user" ? styles.messageBubbleUser : styles.messageBubbleAssistant
-                )}
-              >
-                <p className={styles.messageText}>{message.content || (isStreaming ? " " : "")}</p>
-                {message.attachments?.length ? (
-                  <div className={styles.attachmentList}>
-                    {message.attachments.map((file) => (
-                      <div key={file.id} className={styles.attachmentItem}>
-                        {file.name} · {file.status === "ready" ? "已读取" : file.error}
-                      </div>
-                    ))}
-                  </div>
-                ) : null}
-              </div>
-            </div>
-          ))}
+          <MessageList messages={messages} isStreaming={isStreaming} />
         </div>
 
         <TraceList trace={trace} />
 
         {/* Input Form */}
-        <form onSubmit={handleSubmit} className={styles.inputForm}>
-          {attachments.length > 0 && (
-            <div className={styles.attachmentPreview}>
-              {attachments.map((file) => (
-                <span key={file.id} className={cn(styles.attachmentChip, file.status === "ready" ? styles.attachmentChipReady : styles.attachmentChipError)}>
-                  {file.name}
-                </span>
-              ))}
-            </div>
-          )}
-          <div className={styles.inputRow}>
-            <label className={styles.fileUploadButton} title="上传素材">
-              {isReadingFiles ? <Loader2 size={16} className="animate-spin" /> : <Paperclip size={16} />}
-              <input
-                className={styles.fileInput}
-                type="file"
-                multiple
-                accept=".txt,.md,.pdf,.docx"
-                onChange={(event) => handleFileChange(event.target.files)}
-              />
-            </label>
-            <textarea
-              className={styles.textarea}
-              placeholder="例如：帮我针对这个前端 JD 优化简历，然后粘贴 JD 和简历内容..."
-              value={input}
-              onChange={(event) => setInput(event.target.value)}
-              onKeyDown={(event) => {
-                if (event.key === "Enter" && !event.shiftKey) {
-                  event.preventDefault();
-                  event.currentTarget.form?.requestSubmit();
-                }
-              }}
-            />
-            <button
-              className={styles.sendButton}
-              type="submit"
-              disabled={isStreaming || isReadingFiles}
-              title="发送"
-            >
-              {isStreaming ? <Loader2 size={16} className="animate-spin" /> : <Send size={16} />}
-            </button>
-          </div>
-          <div className={styles.inputFooter}>
-            <UploadCloud className={styles.footerIcon} />
-            支持 txt、md、pdf、docx；业务任务仍由聊天内容触发。
-          </div>
-        </form>
+        <ChatInput
+          attachments={attachments}
+          isStreaming={isStreaming}
+          isReadingFiles={isReadingFiles}
+          input={input}
+          onInputChange={setInput}
+          onSubmit={handleSubmit}
+          onFileChange={handleFileChange}
+        />
       </section>
 
       {/* Artifact Aside */}
@@ -412,31 +343,7 @@ export default function WorkspacePage() {
   );
 }
 
-function TraceList({ trace }: { trace: AgentTraceStep[] }) {
-  if (!trace.length) return null;
-  return (
-    <div className={styles.trace}>
-      <p className={styles.traceTitle}>Agent Trace</p>
-      <div className={styles.traceList}>
-        {trace.map((item) => (
-          <div key={item.id} className={styles.traceItem}>
-            <span
-              className={cn(
-                styles.traceDot,
-                item.status === "done" && styles.traceDotDone,
-                item.status === "running" && styles.traceDotRunning,
-                item.status === "pending" && styles.traceDotPending,
-                item.status === "error" && styles.traceDotError
-              )}
-            />
-            <span>{item.label}</span>
-          </div>
-        ))}
-      </div>
-    </div>
-  );
-}
-
+// ── local helpers ──
 function markLastTrace(trace: AgentTraceStep[], status: AgentTraceStep["status"]) {
   if (!trace.length) return trace;
   return trace.map((item, index) => (index === trace.length - 1 ? { ...item, status } : item));
