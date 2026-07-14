@@ -110,7 +110,7 @@
 }
 
 .chatPanelSubtitle {
-  margin-top: var(--space-1);
+  margin: var(--space-1) 0 0;
   font-size: 0.875rem;
   color: var(--color-muted);
 }
@@ -208,7 +208,7 @@
 }
 
 .traceTitle {
-  margin-bottom: var(--space-2);
+  margin: 0 0 var(--space-2);
   font-size: 0.75rem;
   font-weight: 600;
   text-transform: uppercase;
@@ -225,7 +225,7 @@
   top: 0;
   left: 0;
   right: 0;
-  height: 18px;
+  height: 1.125rem;
   pointer-events: none;
   z-index: 1;
   background: linear-gradient(to bottom, var(--color-panel), transparent);
