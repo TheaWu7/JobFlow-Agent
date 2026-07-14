@@ -65,6 +65,12 @@
   color: var(--color-ink);
 }
 
+.navLinkActive {
+  color: var(--color-brand);
+  font-weight: 600;
+  text-decoration: underline;
+}
+
 .navLinkLabel {
   display: none;
 }

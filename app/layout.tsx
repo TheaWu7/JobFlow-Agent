@@ -1,9 +1,21 @@
 "use client";
 
 import Link from "next/link";
+import { usePathname } from "next/navigation";
 import { BriefcaseBusiness, History, Settings } from "lucide-react";
 import "./globals.css";
 import styles from "./layout.module.css";
+
+function NavLink({ href, label, icon: Icon }: { href: string; label: string; icon: React.ComponentType<{ className?: string }> }) {
+  const pathname = usePathname();
+  const active = pathname === href;
+  return (
+    <Link className={`${styles.navLink} ${active ? styles.navLinkActive : ""}`} href={href}>
+      <span className={styles.navLinkLabel}>{label}</span>
+      <Icon className={styles.navLinkIcon} />
+    </Link>
+  );
+}
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
@@ -17,17 +29,9 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
                 InterviewFlow-AI
               </Link>
               <nav className={styles.nav}>
-                <Link className={styles.navLink} href="/">
-                  Workspace
-                </Link>
-                <Link className={styles.navLink} href="/history">
-                  <span className={styles.navLinkLabel}>History</span>
-                  <History className={styles.navLinkIcon} />
-                </Link>
-                <Link className={styles.navLink} href="/settings">
-                  <span className={styles.navLinkLabel}>Settings</span>
-                  <Settings className={styles.navLinkIcon} />
-                </Link>
+                <NavLink href="/" label="Workspace" icon={BriefcaseBusiness} />
+                <NavLink href="/history" label="History" icon={History} />
+                <NavLink href="/settings" label="Settings" icon={Settings} />
               </nav>
             </div>
           </header>
