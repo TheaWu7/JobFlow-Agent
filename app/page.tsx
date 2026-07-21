@@ -267,9 +267,6 @@ export default function WorkspacePage() {
           interview: eventData.artifact as InterviewArtifact,
         }));
       }
-      if (eventData.detectedTask) {
-        setContext((current) => ({ ...current, lastTask: eventData.detectedTask as TaskType }));
-      }
       if (eventData.artifact.type !== "clarify") {
         saveArtifactToHistory(eventData.artifact, historySummary(eventData.artifact));
       }

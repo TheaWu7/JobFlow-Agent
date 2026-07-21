@@ -12,10 +12,14 @@ export function demoMessage(task: TaskType) {
 }
 
 export function demoArtifact(body: ChatRequest): Artifact {
-  if (body.task === "mock_interview") return createDemoInterview();
-  if (body.task === "interview_answer") return updateDemoInterview(body.context.interview, body.input);
-  if (body.task === "interview_review") return createDemoReview();
-  if (body.task === "project_deep_dive") return DEMO_PROJECT_ARTIFACT;
+  if (body.task === "interview") {
+    if (body.context.interview && (body.context.interview.status === "in_progress" || body.context.interview.status === "ready")) {
+      return updateDemoInterview(body.context.interview, body.input);
+    }
+    return createDemoInterview();
+  }
+  if (body.task === "review") return createDemoReview();
+  if (body.task === "project") return DEMO_PROJECT_ARTIFACT;
   return DEMO_RESUME_ARTIFACT;
 }
 
@@ -61,11 +65,10 @@ function createDemoReview(): ReviewArtifact {
 // ── Demo Messages ──
 
 const DEMO_MESSAGES: Record<TaskType, string> = {
-  resume_optimize: "我已完成 JD 与简历的匹配分析，并把可直接替换到简历里的优化句式整理在右侧。",
-  mock_interview: "我会基于当前 JD 和简历开始一轮 6 题模拟面试。右侧会同步显示题目、考察点和进度。",
-  interview_answer: "收到你的回答。我先给出即时点评，并根据当前题目决定是否进行一次追问。",
-  interview_review: "我已读取最近一轮面试记录，正在输出维度评分、短板标签和练习建议。",
-  project_deep_dive: "我已把项目材料整理成 STAR 口述脚本，并补充了高频追问和参考作答框架。",
+  resume: "我已完成 JD 与简历的匹配分析，并把可直接替换到简历里的优化句式整理在右侧。",
+  interview: "我会基于当前 JD 和简历开始一轮 6 题模拟面试。右侧会同步显示题目、考察点和进度。",
+  review: "我已读取最近一轮面试记录，正在输出维度评分、短板标签和练习建议。",
+  project: "我已把项目材料整理成 STAR 口述脚本，并补充了高频追问和参考作答框架。",
   clarify: "我还需要补齐关键材料，才能继续生成可靠结果。",
   unknown: "我先理解一下你的需求，然后自动选择最合适的任务来生成结果。",
 };

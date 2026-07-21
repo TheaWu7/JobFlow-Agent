@@ -3,7 +3,6 @@
 import type {
   AgentDecision,
   AgentTraceStep,
-  ArtifactType,
   ChatMessage,
   TaskType,
   UploadedAttachment,
@@ -11,25 +10,21 @@ import type {
 } from "@/types/agent";
 import { uid } from "@/lib/utils";
 
-const taskPatterns: Array<{ task: TaskType; artifactType: ArtifactType; tests: RegExp[] }> = [
+const taskPatterns: Array<{ task: TaskType; tests: RegExp[] }> = [
   {
-    task: "resume_optimize",
-    artifactType: "resume",
+    task: "resume",
     tests: [/简历.*(优化|定制|匹配|修改)/, /JD.*简历/, /resume|cv/i]
   },
   {
-    task: "mock_interview",
-    artifactType: "interview",
+    task: "interview",
     tests: [/(模拟|开始|来).*面试/, /mock interview/i]
   },
   {
-    task: "interview_review",
-    artifactType: "review",
+    task: "review",
     tests: [/(复盘|总结|分析).*面试/, /(短板|评分|改进)/]
   },
   {
-    task: "project_deep_dive",
-    artifactType: "project",
+    task: "project",
     tests: [/(项目).*(深挖|打磨|STAR|追问|口述)/i, /STAR/i]
   }
 ];
@@ -62,9 +57,8 @@ export function decideTask(
 ): AgentDecision {
   if (activeInterview && input.trim() && !looksLikeNewTask(input)) {
     return {
-      task: "interview_answer",
-      intendedTask: "interview_answer",
-      artifactType: "interview",
+      task: "interview",
+      intendedTask: "interview",
       missing: [],
       userPrompt: input
     };
@@ -72,13 +66,11 @@ export function decideTask(
 
   const matched = taskPatterns.find((item) => item.tests.some((test) => test.test(input)));
   const task = matched?.task ?? inferTaskFromContext(input);
-  const artifactType = matched?.artifactType ?? artifactTypeForTask(task);
   const missing = missingMaterials(task, context);
 
   return {
     task: missing.length ? "clarify" : task,
     intendedTask: task,
-    artifactType: missing.length ? "clarify" : artifactType,
     missing,
     userPrompt: input
   };
@@ -124,11 +116,10 @@ export function materialLabel(item: AgentDecision["missing"][number]) {
 
 export function taskLabel(task: TaskType) {
   const labels: Record<TaskType, string> = {
-    resume_optimize: "简历定制优化",
-    mock_interview: "沉浸式模拟面试",
-    interview_answer: "面试作答点评",
-    interview_review: "面试智能复盘",
-    project_deep_dive: "项目深度打磨",
+    resume: "简历定制优化",
+    interview: "模拟面试",
+    review: "面试智能复盘",
+    project: "项目深度打磨",
     clarify: "上下文补全",
     unknown: "自动识别任务类型"
   };
@@ -143,36 +134,28 @@ export function messagesToTranscript(messages: ChatMessage[]) {
 
 function inferTaskFromContext(input: string): TaskType {
   if (/面试|回答|追问/.test(input)) {
-    return "mock_interview";
+    return "interview";
   }
   if (/项目|STAR/i.test(input)) {
-    return "project_deep_dive";
+    return "project";
   }
   if (/JD|岗位|职位|简历|resume|cv/i.test(input)) {
-    return "resume_optimize";
+    return "resume";
   }
-  return "clarify";
-}
-
-function artifactTypeForTask(task: TaskType): ArtifactType {
-  if (task === "resume_optimize") return "resume";
-  if (task === "mock_interview" || task === "interview_answer") return "interview";
-  if (task === "interview_review") return "review";
-  if (task === "project_deep_dive") return "project";
   return "clarify";
 }
 
 function missingMaterials(task: TaskType, context: WorkspaceContext) {
-  if (task === "resume_optimize") {
+  if (task === "resume") {
     return [!context.jd && "jd", !context.resume && "resume"].filter(Boolean) as Array<"jd" | "resume">;
   }
-  if (task === "mock_interview") {
+  if (task === "interview") {
     return [!context.jd && "jd", !context.resume && "resume"].filter(Boolean) as Array<"jd" | "resume">;
   }
-  if (task === "interview_review") {
+  if (task === "review") {
     return [!context.interview && "interview"].filter(Boolean) as Array<"interview">;
   }
-  if (task === "project_deep_dive") {
+  if (task === "project") {
     return [!context.project && "project"].filter(Boolean) as Array<"project">;
   }
   return [];

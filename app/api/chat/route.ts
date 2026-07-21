@@ -108,10 +108,10 @@ async function streamDeepSeek(body: ChatRequest, send: (payload: unknown) => voi
     }
   }
 
-  const { artifact: parsedArtifact, detectedTask } = parseModelArtifact(accumulated);
+  const parsedArtifact = parseModelArtifact(accumulated);
   if (parsedArtifact) {
     send({ type: "trace", label: "结构化 Artifact 解析完成" });
-    send({ type: "artifact", artifact: parsedArtifact, detectedTask: detectedTask ?? null });
+    send({ type: "artifact", artifact: parsedArtifact });
   } else {
     send({ type: "trace", label: "模型未返回标准 JSON，已保留聊天文本" });
   }
@@ -128,18 +128,14 @@ async function streamDemo(body: ChatRequest, send: (payload: unknown) => void) {
   send({ type: "artifact", artifact: demoArtifact(body) });
 }
 
-function parseModelArtifact(raw: string): { artifact: Artifact | null; detectedTask?: string } {
-  const parsed = safeJsonParse<{ artifact?: Artifact; detectedTask?: string }>(raw);
+function parseModelArtifact(raw: string): Artifact | null {
+  const parsed = safeJsonParse<{ artifact?: Artifact }>(raw);
   if (parsed?.artifact?.type) {
-    return { artifact: parsed.artifact, detectedTask: parsed.detectedTask };
+    return parsed.artifact;
   }
   const direct = safeJsonParse<Artifact>(raw);
   if (direct?.type) {
-    return { artifact: direct };
+    return direct;
   }
-  const nested = safeJsonParse<{ detectedTask?: string; artifact?: Artifact }>(raw);
-  if (nested?.artifact?.type) {
-    return { artifact: nested.artifact, detectedTask: nested.detectedTask };
-  }
-  return { artifact: null };
+  return null;
 }

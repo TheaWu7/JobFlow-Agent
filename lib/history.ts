@@ -1,6 +1,6 @@
 "use client";
 
-import type { Artifact, ArtifactType, HistoryRecord } from "@/types/agent";
+import type { Artifact, HistoryRecord } from "@/types/agent";
 import { uid } from "@/lib/utils";
 
 const HISTORY_KEY = "interviewflow.history.v1";
@@ -25,7 +25,7 @@ export function loadHistory(): HistoryRecord[] {
 export function saveArtifactToHistory(artifact: Artifact, summary: string) {
   const record: HistoryRecord = {
     id: uid("hist"),
-    type: artifact.type as ArtifactType,
+    type: artifact.type,
     title: artifact.title,
     createdAt: new Date().toISOString(),
     summary,

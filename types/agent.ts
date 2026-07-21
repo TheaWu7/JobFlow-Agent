@@ -1,18 +1,10 @@
 export type TaskType =
-  | "resume_optimize"
-  | "mock_interview"
-  | "interview_answer"
-  | "interview_review"
-  | "project_deep_dive"
-  | "clarify"
-  | "unknown";
-export type ArtifactType =
-  | "empty"
   | "resume"
   | "interview"
   | "review"
   | "project"
-  | "clarify";
+  | "clarify"
+  | "unknown";
 
 export type MessageRole = "user" | "assistant" | "system";
 
@@ -50,7 +42,6 @@ export interface WorkspaceContext {
 export interface AgentDecision {
   task: TaskType;
   intendedTask: TaskType;
-  artifactType: ArtifactType;
   missing: Array<"jd" | "resume" | "project" | "interview">;
   userPrompt: string;
 }
@@ -140,7 +131,7 @@ export type Artifact =
 
 export interface HistoryRecord {
   id: string;
-  type: ArtifactType;
+  type: TaskType;
   title: string;
   createdAt: string;
   summary: string;
@@ -154,6 +145,6 @@ export interface SettingsState {
 export type StreamEvent =
   | { type: "trace"; label: string }
   | { type: "delta"; text: string }
-  | { type: "artifact"; artifact: Artifact; detectedTask?: string | null }
+  | { type: "artifact"; artifact: Artifact }
   | { type: "error"; message: string }
   | { type: "done" };
