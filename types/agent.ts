@@ -2,7 +2,6 @@ export type TaskType =
   | "resume"
   | "interview"
   | "review"
-  | "project"
   | "clarify"
   | "unknown";
 
@@ -42,7 +41,7 @@ export interface WorkspaceContext {
 export interface AgentDecision {
   task: TaskType;
   intendedTask: TaskType;
-  missing: Array<"jd" | "resume" | "project" | "interview">;
+  missing: Array<"jd" | "resume" | "interview">;
   userPrompt: string;
 }
 
@@ -98,23 +97,6 @@ export interface ReviewArtifact {
   practicePlan: string[];
 }
 
-export interface ProjectArtifact {
-  type: "project";
-  title: string;
-  star: {
-    situation: string;
-    task: string;
-    action: string;
-    result: string;
-  };
-  pitchScript: string;
-  followUps: Array<{
-    question: string;
-    answerFrame: string;
-  }>;
-  riskPoints: string[];
-}
-
 export interface ClarifyArtifact {
   type: "clarify";
   title: string;
@@ -126,7 +108,6 @@ export type Artifact =
   | ResumeArtifact
   | InterviewArtifact
   | ReviewArtifact
-  | ProjectArtifact
   | ClarifyArtifact;
 
 export interface HistoryRecord {

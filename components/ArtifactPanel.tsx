@@ -6,7 +6,6 @@ import type { Artifact } from "@/types/agent";
 import { ResumeArtifactView } from "./artifact/ResumeArtifactView";
 import { InterviewArtifactView } from "./artifact/InterviewArtifactView";
 import { ReviewArtifactView } from "./artifact/ReviewArtifactView";
-import { ProjectArtifactView } from "./artifact/ProjectArtifactView";
 import styles from "./ArtifactPanel.module.css";
 
 export const ArtifactPanel = memo(function ArtifactPanel({ artifact }: { artifact: Artifact | null }) {
@@ -25,7 +24,6 @@ export const ArtifactPanel = memo(function ArtifactPanel({ artifact }: { artifac
   if (artifact.type === "resume") return <ResumeArtifactView artifact={artifact} />;
   if (artifact.type === "interview") return <InterviewArtifactView artifact={artifact} />;
   if (artifact.type === "review") return <ReviewArtifactView artifact={artifact} />;
-  if (artifact.type === "project") return <ProjectArtifactView artifact={artifact} />;
 
   if (artifact.type === "clarify") {
     const isError = artifact.title === "请求失败";
@@ -45,7 +43,7 @@ export const ArtifactPanel = memo(function ArtifactPanel({ artifact }: { artifac
             ))}
             {(!artifact.missing || artifact.missing.length === 0) && (
               <span className={styles.tag}>
-                请描述你的需求，例如：帮我优化简历、开始模拟面试、复盘面试、深挖项目
+                请描述你的需求，例如：帮我优化简历、开始模拟面试、复盘面试
               </span>
             )}
           </div>
@@ -65,4 +63,4 @@ export const ArtifactPanel = memo(function ArtifactPanel({ artifact }: { artifac
       <p className={styles.panelMessage}>未知的 Artifact 类型，请刷新页面重试。</p>
     </section>
   );
-})
+});

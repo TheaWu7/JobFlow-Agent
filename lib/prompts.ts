@@ -38,13 +38,12 @@ ${transcript}
 请按任务 ${task} 生成结构化 Artifact：
 - resume: {type,title,jdSummary:{role,seniority,mustHave,niceToHave},matchScore,strengths,gaps,optimizations:[{section,before,after,reason}]}
 - interview: {type,title,currentIndex,status,questions:[{id,question,focus,answer,feedback,followUp}],finalReview?}
-- review: {type,title,overallScore,dimensionScores:[{name,score,evidence}],weaknessTags,improvements,practicePlan}
-- project: {type,title,star:{situation,task,action,result},pitchScript,followUps:[{question,answerFrame}],riskPoints}`;
+- review: {type,title,overallScore,dimensionScores:[{name,score,evidence}],weaknessTags,improvements,practicePlan}`;
 }
 
 const SYSTEM_PROMPT_UNKNOWN = `你是 InterviewFlow-AI，一个垂直求职场景 Agent。
 必须用中文输出。
 先做两件事：
-1. 判断用户属于哪一类任务：resume、interview、review 还是 project。
-2. 输出 formatJson: {"detectedTask": "任务类型", "artifact": {结构化 Artifact}}
+1. 判断用户属于哪一类任务：resume、interview 还是 review。
+2. 输出 formatJson: {"artifact": {结构化 Artifact}}
 可以按实际上下文选择最合适的任务，但不能编造材料。`;

@@ -22,10 +22,6 @@ const taskPatterns: Array<{ task: TaskType; tests: RegExp[] }> = [
   {
     task: "review",
     tests: [/(复盘|总结|分析).*面试/, /(短板|评分|改进)/]
-  },
-  {
-    task: "project",
-    tests: [/(项目).*(深挖|打磨|STAR|追问|口述)/i, /STAR/i]
   }
 ];
 
@@ -97,7 +93,7 @@ export function mergeContextFromInput(
 
 export function buildClarifyMessage(missing: AgentDecision["missing"], task: TaskType) {
   if (!missing.length) {
-    return "我可以继续处理，但还不清楚你想做哪一种任务。你可以直接说：帮我优化简历、开始模拟面试、复盘刚才的面试，或者帮我深挖这个项目。";
+    return "我可以继续处理，但还不清楚你想做哪一种任务。你可以直接说：帮我优化简历、开始模拟面试、复盘刚才的面试。";
   }
   const names = missing.map(materialLabel).join("、");
   const taskName = taskLabel(task);
@@ -119,7 +115,6 @@ export function taskLabel(task: TaskType) {
     resume: "简历定制优化",
     interview: "模拟面试",
     review: "面试智能复盘",
-    project: "项目深度打磨",
     clarify: "上下文补全",
     unknown: "自动识别任务类型"
   };
@@ -136,9 +131,6 @@ function inferTaskFromContext(input: string): TaskType {
   if (/面试|回答|追问/.test(input)) {
     return "interview";
   }
-  if (/项目|STAR/i.test(input)) {
-    return "project";
-  }
   if (/JD|岗位|职位|简历|resume|cv/i.test(input)) {
     return "resume";
   }
@@ -154,9 +146,6 @@ function missingMaterials(task: TaskType, context: WorkspaceContext) {
   }
   if (task === "review") {
     return [!context.interview && "interview"].filter(Boolean) as Array<"interview">;
-  }
-  if (task === "project") {
-    return [!context.project && "project"].filter(Boolean) as Array<"project">;
   }
   return [];
 }

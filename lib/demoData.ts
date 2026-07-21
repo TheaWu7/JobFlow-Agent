@@ -19,7 +19,6 @@ export function demoArtifact(body: ChatRequest): Artifact {
     return createDemoInterview();
   }
   if (body.task === "review") return createDemoReview();
-  if (body.task === "project") return DEMO_PROJECT_ARTIFACT;
   return DEMO_RESUME_ARTIFACT;
 }
 
@@ -68,7 +67,6 @@ const DEMO_MESSAGES: Record<TaskType, string> = {
   resume: "我已完成 JD 与简历的匹配分析，并把可直接替换到简历里的优化句式整理在右侧。",
   interview: "我会基于当前 JD 和简历开始一轮 6 题模拟面试。右侧会同步显示题目、考察点和进度。",
   review: "我已读取最近一轮面试记录，正在输出维度评分、短板标签和练习建议。",
-  project: "我已把项目材料整理成 STAR 口述脚本，并补充了高频追问和参考作答框架。",
   clarify: "我还需要补齐关键材料，才能继续生成可靠结果。",
   unknown: "我先理解一下你的需求，然后自动选择最合适的任务来生成结果。",
 };
@@ -134,26 +132,3 @@ const DEMO_REVIEW_ARTIFACT: ReviewArtifact = {
   practicePlan: ["每天复述项目 3 分钟版本", "针对 SSE、Artifact、workflow 各准备一道追问", "录音检查是否有空泛表达"],
 };
 
-const DEMO_PROJECT_ARTIFACT: Artifact = {
-  type: "project",
-  title: "项目深挖 STAR 脚本",
-  star: {
-    situation: "业务需要提升候选人从 JD 到面试复盘的准备效率，原流程分散在多个工具中。",
-    task: "你负责搭建单入口 Agent 工作台，让用户通过自然语言完成简历优化、模拟面试和复盘。",
-    action: "设计统一意图识别、素材校验、SSE 流式输出和动态 Artifact 面板，并沉淀可复用 workflow。",
-    result: "MVP 能完整演示求职准备闭环，突出前端 Agent 工程化、状态编排和结构化 AI 输出能力。",
-  },
-  pitchScript:
-    "这个项目本质上不是聊天壳，而是一个单入口 Agent 工作台。我重点解决了三件事：第一，用户只需要自然语言输入，系统自动判断任务和缺失素材；第二，不同业务 workflow 都输出结构化 Artifact，避免 AI 结果散在聊天里；第三，通过 SSE 把模型生成、Trace 和结果面板串成一个可演示的实时体验。",
-  followUps: [
-    {
-      question: "为什么不做多个功能按钮？",
-      answerFrame: "强调产品目标是验证 Agent 入口，把业务决策收敛到编排层，而不是让用户理解功能菜单。",
-    },
-    {
-      question: "如何保证 AI 输出稳定渲染？",
-      answerFrame: "用明确 JSON schema、服务端解析兜底、Artifact 类型分发和 Demo 模式保障展示稳定性。",
-    },
-  ],
-  riskPoints: ["模型返回 JSON 不稳定时需要兜底", "文件解析质量影响素材识别", "无登录版本只能做本地历史"],
-};
