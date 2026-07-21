@@ -1,4 +1,4 @@
-# InterviewFlow-AI
+# JobFlow-Agent
 
 单入口 Agent 求职工作台 MVP。用户只通过聊天输入需求，系统自动识别任务、校验素材、调用工作流，并在右侧动态渲染结构化 Artifact。
 
@@ -30,14 +30,6 @@ npm run dev
 ```
 
 打开 `http://localhost:3000`。
-
-## Deploy to Vercel
-
-1. 推送到 GitHub。
-2. 在 Vercel 导入项目。
-3. 使用默认 Next.js 构建配置即可。
-4. 配置环境变量 `DEEPSEEK_API_KEY`、`DEEPSEEK_BASE_URL`、`DEEPSEEK_MODEL`。
-5. 不再在网页里输入 API Key，Settings 里只保留 Demo 模式。
 
 ## Demo Flow
 
