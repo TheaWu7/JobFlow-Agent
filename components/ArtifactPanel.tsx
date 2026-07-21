@@ -1,5 +1,6 @@
 "use client";
 
+import { memo } from "react";
 import { AlertCircle, ClipboardList } from "lucide-react";
 import type { Artifact } from "@/types/agent";
 import { ResumeArtifactView } from "./artifact/ResumeArtifactView";
@@ -8,7 +9,7 @@ import { ReviewArtifactView } from "./artifact/ReviewArtifactView";
 import { ProjectArtifactView } from "./artifact/ProjectArtifactView";
 import styles from "./ArtifactPanel.module.css";
 
-export function ArtifactPanel({ artifact }: { artifact: Artifact | null }) {
+export const ArtifactPanel = memo(function ArtifactPanel({ artifact }: { artifact: Artifact | null }) {
   if (!artifact) {
     return (
       <section className={styles.emptyState}>
@@ -64,4 +65,4 @@ export function ArtifactPanel({ artifact }: { artifact: Artifact | null }) {
       <p className={styles.panelMessage}>未知的 Artifact 类型，请刷新页面重试。</p>
     </section>
   );
-}
+})
