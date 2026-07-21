@@ -21,7 +21,7 @@ export function ResumeArtifactView({ artifact }: { artifact: ResumeArtifact }) {
       <TwoColumn titleLeft="匹配优势" left={artifact.strengths} titleRight="待补短板" right={artifact.gaps} />
       <div className={styles.card}>
         <h3 className={styles.cardTitle}>简历优化对比</h3>
-        <div className="flex flex-col gap-3 mt-3">
+        <div className={styles.optimizationList}>
           {artifact.optimizations.map((item) => (
             <div key={item.section} className={styles.optimizationCard}>
               <div className={styles.optimizationHeader}>

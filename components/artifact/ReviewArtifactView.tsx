@@ -20,7 +20,7 @@ export function ReviewArtifactView({
         <ScoreCard label="综合评分" score={artifact.overallScore} />
         <div className={styles.card}>
           <h3 className={styles.cardTitle}>短板标签</h3>
-          <div className="flex flex-wrap gap-2 mt-3">
+          <div className={styles.tagRow}>
             {artifact.weaknessTags.map((item) => (
               <span key={item} className={styles.weaknessTag}>
                 {item}
@@ -31,7 +31,7 @@ export function ReviewArtifactView({
       </div>
       <div className={styles.card}>
         <h3 className={styles.cardTitle}>维度评分</h3>
-        <div className="flex flex-col gap-3 mt-3">
+        <div className={styles.dimensionList}>
           {artifact.dimensionScores.map((item) => (
             <div key={item.name}>
               <div className={styles.dimensionLabels}>

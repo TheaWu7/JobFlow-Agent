@@ -32,7 +32,7 @@ export function InterviewArtifactView({ artifact }: { artifact: InterviewArtifac
           <p className={styles.currentQuestionFocus}>考察点：{current.focus}</p>
         </div>
       )}
-      <div className="flex flex-col gap-3">
+      <div className={styles.questionList}>
         {artifact.questions.map((question, index) => (
           <div key={question.id} className={styles.questionCard}>
             <div className={styles.questionRow}>

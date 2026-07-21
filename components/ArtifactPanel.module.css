@@ -219,6 +219,13 @@
   color: var(--color-muted);
 }
 
+.optimizationList {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+  margin-top: var(--space-3);
+}
+
 .optimizationCard {
   border-radius: var(--radius-md);
   border: 1px solid var(--color-line);
@@ -303,6 +310,12 @@
   color: var(--color-muted);
 }
 
+.questionList {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+}
+
 .questionCard {
   border-radius: var(--radius-lg);
   border: 1px solid var(--color-line);
@@ -351,6 +364,13 @@
   padding: var(--space-1) var(--space-2);
   font-size: 0.75rem;
   color: var(--color-accent);
+}
+
+.dimensionList {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+  margin-top: var(--space-3);
 }
 
 .dimensionLabels {
