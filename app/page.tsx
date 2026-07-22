@@ -64,7 +64,7 @@ export default function WorkspacePage() {
           id: uid("msg"),
           role: "assistant",
           content:
-            "你好，我是 InterviewFlow-AI。直接告诉我你要做什么，或粘贴 JD、简历、项目材料，我会自动判断任务并在右侧生成结果。",
+            "你好，我是 JobFlow-Agent。直接告诉我你要做什么，或粘贴 JD、简历、项目材料，我会自动判断任务并在右侧生成结果。",
           createdAt: new Date().toISOString(),
         },
       ]);
@@ -135,7 +135,33 @@ export default function WorkspacePage() {
     setInput("");
     setAttachments([]);
 
-    const mergedContext = mergeContextFromInput(context, trimmed, readyAttachments);
+    const pieces = [trimmed, ...readyAttachments.map((a) => a.text)].filter(Boolean);
+    let classified:
+      | Array<{ type: "jd" | "resume" | "project" | "unknown"; text: string }>
+      | undefined;
+
+    if (pieces.length) {
+      try {
+        const res = await fetch("/api/classify", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ pieces }),
+        });
+        const data = await res.json();
+        if (data.results?.length) {
+          classified = data.results;
+          const labels = data.results.map((r: { type: string }) => r.type).join("、");
+          setTrace((current) => [
+            ...current,
+            { id: uid("trace"), label: `LLM 素材分类完成：${labels}`, status: "done" },
+          ]);
+        }
+      } catch {
+        console.warn("LLM 解析失败，使用正则兜底");
+      }
+    }
+
+    const mergedContext = mergeContextFromInput(context, trimmed, readyAttachments, classified);
     if (artifact?.type === "interview") {
       mergedContext.interview = artifact;
     }
@@ -347,9 +373,18 @@ function markLastTrace(trace: AgentTraceStep[], status: AgentTraceStep["status"]
 }
 
 function historySummary(artifact: Artifact) {
-  if (artifact.type === "resume") return `匹配度 ${artifact.matchScore}，${artifact.optimizations.length} 条优化建议`;
-  if (artifact.type === "interview") return `${artifact.questions.length} 道题，状态：${artifact.status}`;
-  if (artifact.type === "review") return `综合评分 ${artifact.overallScore}，${artifact.weaknessTags.length} 个短板标签`;
+  if (artifact.type === "resume")
+    return `匹配度 ${artifact.matchScore}，${
+      Array.isArray(artifact.optimizations) ? artifact.optimizations.length : 0
+    } 条优化建议`;
+  if (artifact.type === "interview")
+    return `${Array.isArray(artifact.questions) ? artifact.questions.length : 0} 道题，状态：${
+      artifact.status
+    }`;
+  if (artifact.type === "review")
+    return `综合评分 ${artifact.overallScore}，${
+      Array.isArray(artifact.weaknessTags) ? artifact.weaknessTags.length : 0
+    } 个短板标签`;
 
   return artifact.title;
 }

@@ -26,7 +26,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
             <div className={styles.headerInner}>
               <Link href="/" className={styles.logo}>
                 <BriefcaseBusiness className={styles.logoIcon} />
-                InterviewFlow-AI
+                JobFlow Agent
               </Link>
               <nav className={styles.nav}>
                 <NavLink href="/" label="Workspace" icon={BriefcaseBusiness} />

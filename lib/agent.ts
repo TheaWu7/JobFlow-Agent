@@ -75,18 +75,37 @@ export function decideTask(
 export function mergeContextFromInput(
   previous: WorkspaceContext,
   input: string,
-  attachments: UploadedAttachment[]
+  attachments: UploadedAttachment[],
+  classified?: Array<{ type: "jd" | "resume" | "project" | "unknown"; text: string }>
 ): WorkspaceContext {
-  const combined = [input, ...attachments.map((item) => item.text)].join("\n\n");
   const next = { ...previous };
+
+  if (classified?.length) {
+    for (const item of classified) {
+      if (!item.text) continue;
+      if (item.type === "jd") {
+        next.jd = item.text;
+      } else if (item.type === "resume") {
+        next.resume = item.text;
+      } else if (item.type === "project") {
+        next.project = item.text;
+      }
+      // unknown: skip
+    }
+    return next;
+  }
+
+  // fallback: regex heuristics
+  const pieces = [input, ...attachments.map((item) => item.text)].filter(Boolean);
+  const combined = pieces.join("\n\n");
   if (looksLikeJd(combined)) {
-    next.jd = selectLonger(next.jd, combined);
+    next.jd = combined;
   }
   if (looksLikeResume(combined)) {
-    next.resume = selectLonger(next.resume, combined);
+    next.resume = combined;
   }
   if (looksLikeProject(combined)) {
-    next.project = selectLonger(next.project, combined);
+    next.project = combined;
   }
   return next;
 }
@@ -180,11 +199,4 @@ function looksLikeProject(text: string) {
   const hasTech = /(react|vue|next|node|python|java|数据库|架构|前端|后端|全栈)/i.test(text);
   const hasAction = /(负责|搭建|设计|开发|优化|实现|重构|主导|参与|独立)/i.test(text);
   return hasTech && hasAction;
-}
-
-function selectLonger(current: string | undefined, incoming: string) {
-  if (!current || incoming.length > current.length) {
-    return incoming.slice(0, 24000);
-  }
-  return current;
 }
