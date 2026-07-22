@@ -17,7 +17,7 @@ const taskPatterns: Array<{ task: TaskType; tests: RegExp[] }> = [
   },
   {
     task: "interview",
-    tests: [/(模拟|开始|来).*面试/, /mock interview/i]
+    tests: [/(模拟|开始|来).*面试/, /面试准备/, /mock interview/i]
   },
   {
     task: "review",
@@ -93,7 +93,7 @@ export function mergeContextFromInput(
 
 export function buildClarifyMessage(missing: AgentDecision["missing"], task: TaskType) {
   if (!missing.length) {
-    return "我可以继续处理，但还不清楚你想做哪一种任务。你可以直接说：帮我优化简历、开始模拟面试、复盘刚才的面试。";
+    return "我可以继续处理，但还不清楚你想做哪一种任务。你可以直接说：帮我优化简历、开始面试准备、复盘刚才的面试。";
   }
   const names = missing.map(materialLabel).join("、");
   const taskName = taskLabel(task);
@@ -113,7 +113,7 @@ export function materialLabel(item: AgentDecision["missing"][number]) {
 export function taskLabel(task: TaskType) {
   const labels: Record<TaskType, string> = {
     resume: "简历定制优化",
-    interview: "模拟面试",
+    interview: "面试准备",
     review: "面试智能复盘",
     clarify: "上下文补全",
     unknown: "自动识别任务类型"

@@ -43,7 +43,7 @@ export const ArtifactPanel = memo(function ArtifactPanel({ artifact }: { artifac
             ))}
             {(!artifact.missing || artifact.missing.length === 0) && (
               <span className={styles.tag}>
-                请描述你的需求，例如：帮我优化简历、开始模拟面试、复盘面试
+                请描述你的需求，例如：帮我优化简历、开始面试准备、复盘面试
               </span>
             )}
           </div>

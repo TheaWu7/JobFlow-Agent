@@ -5,9 +5,8 @@
 ## Features
 
 - JD 结构化解析 + 简历匹配优化
-- AI 模拟面试 + 实时作答点评
+- AI 面试准备 + 提供面试时需要注意的知识点&题目
 - 面试复盘 + 短板维度分析
-- 项目 STAR 脚本 + 高频追问
 - DeepSeek SSE 服务端代理
 - Demo 模式，无 API Key 也可演示完整流程
 - 本地 History，只读查看历史结果
@@ -17,7 +16,7 @@
 
 - Next.js App Router
 - TypeScript
-- Tailwind CSS
+- CSS Module
 - lucide-react
 - DeepSeek OpenAI-compatible API
 - localStorage 本地持久化

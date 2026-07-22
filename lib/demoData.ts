@@ -25,7 +25,7 @@ export function demoArtifact(body: ChatRequest): Artifact {
 function createDemoInterview(): InterviewArtifact {
   return {
     type: "interview",
-    title: "前端 AI Agent 岗位模拟面试",
+    title: "前端 AI Agent 岗位面试准备",
     currentIndex: 0,
     status: "in_progress",
     questions: DEMO_INTERVIEW_QUESTIONS.map((q) => ({ ...q, id: uid("q") })),
@@ -65,7 +65,7 @@ function createDemoReview(): ReviewArtifact {
 
 const DEMO_MESSAGES: Record<TaskType, string> = {
   resume: "我已完成 JD 与简历的匹配分析，并把可直接替换到简历里的优化句式整理在右侧。",
-  interview: "我会基于当前 JD 和简历开始一轮 6 题模拟面试。右侧会同步显示题目、考察点和进度。",
+  interview: "我会基于当前 JD 和简历开始一轮 6 题面试准备。右侧会同步显示题目、考察点和进度。",
   review: "我已读取最近一轮面试记录，正在输出维度评分、短板标签和练习建议。",
   clarify: "我还需要补齐关键材料，才能继续生成可靠结果。",
   unknown: "我先理解一下你的需求，然后自动选择最合适的任务来生成结果。",
@@ -120,7 +120,7 @@ const DEMO_RESUME_ARTIFACT: Artifact = {
 
 const DEMO_REVIEW_ARTIFACT: ReviewArtifact = {
   type: "review",
-  title: "模拟面试复盘报告",
+  title: "面试复盘报告",
   overallScore: 78,
   dimensionScores: [
     { name: "项目理解", score: 84, evidence: "能说明业务闭环和单入口产品意图。" },
