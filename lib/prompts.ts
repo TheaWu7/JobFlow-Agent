@@ -14,6 +14,15 @@ JSON 必须符合任务结构，不能省略 artifact.type 和 artifact.title。
 不要编造不存在的经历；如果材料不足，明确指出缺口。`;
 }
 
+const ARTIFACT_SCHEMA: Record<string, string> = {
+  resume:
+    "{type:\"resume\",title,jdSummary:{role,seniority,mustHave,niceToHave},matchScore,strengths,gaps,optimizations:[{section,before,after,reason}]}",
+  interview:
+    "{type:\"interview\",title,currentIndex,status,questions:[{id,question,focus,answer,feedback,followUp}],finalReview?}",
+  review:
+    "{type:\"review\",title,overallScore,dimensionScores:[{name,score,evidence}],weaknessTags,improvements,practicePlan}",
+};
+
 export function buildUserPrompt(body: {
   input: string;
   context: WorkspaceContext;
@@ -21,6 +30,8 @@ export function buildUserPrompt(body: {
   task: TaskType;
 }) {
   const { input, context, transcript, task } = body;
+  const schema = ARTIFACT_SCHEMA[task] ?? "";
+
   return `用户最新输入：
 ${input}
 
@@ -37,10 +48,8 @@ ${context.project || "无"}
 聊天记录:
 ${transcript}
 
-请按任务 ${task} 生成并返回对应结构化 Artifact，任务对应数据内容如下：
-- resume: {type,title,jdSummary:{role,seniority,mustHave,niceToHave},matchScore,strengths,gaps,optimizations:[{section,before,after,reason}]}
-- interview: {type,title,currentIndex,status,questions:[{id,question,focus,answer,feedback,followUp}],finalReview?}
-- review: {type,title,overallScore,dimensionScores:[{name,score,evidence}],weaknessTags,improvements,practicePlan}`;
+请按任务 ${task} 生成并返回对应结构化 Artifact：
+${schema}`;
 }
 
 const SYSTEM_PROMPT_UNKNOWN = `你是 JobFlow-Agent，一个垂直求职场景 Agent。
