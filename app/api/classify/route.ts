@@ -85,10 +85,7 @@ async function classifyWithLLM(pieces: string[]): Promise<ClassifyResult[]> {
   const content = data?.choices?.[0]?.message?.content;
   if (!content) return [];
 
-  console.log('classifyWithLLM content', { content })
-
   const arr = safeJsonParse<ClassifyResult[]>(content);
-  console.log('classifyWithLLM arr', { arr })
 
   if (!Array.isArray(arr)) return [];
 

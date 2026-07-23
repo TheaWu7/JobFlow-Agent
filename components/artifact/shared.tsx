@@ -38,7 +38,7 @@ export function TagGroup({
     <div className={styles.tagGroup}>
       <p className={styles.tagGroupTitle}>{title}</p>
       <div className={styles.tagGroupList}>
-        {items.map((item) => (
+        {(Array.isArray(items) ? items : []).map((item) => (
           <span
             key={item}
             className={tone === "warn" ? styles.tagGroupItemWarn : styles.tagGroupItem}
@@ -75,7 +75,7 @@ export function ListPanel({ title, items }: { title: string; items: string[] }) 
     <div className={styles.listPanel}>
       <h3 className={styles.listPanelTitle}>{title}</h3>
       <ul className={styles.listPanelItems}>
-        {items.map((item) => (
+        {(Array.isArray(items) ? items : []).map((item) => (
           <li key={item} className={styles.listItem}>
             <span className={styles.listItemDot} />
             <span>{item}</span>

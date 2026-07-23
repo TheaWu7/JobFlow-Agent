@@ -123,7 +123,6 @@ export function materialLabel(item: AgentDecision["missing"][number]) {
   const labels = {
     jd: "目标 JD",
     resume: "简历内容",
-    project: "项目描述",
     interview: "完整面试记录"
   };
   return labels[item];
