@@ -351,10 +351,94 @@
   font-weight: 500;
 }
 
+.questionMetaWrap {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
 .questionFocus {
   margin-top: var(--space-1);
   font-size: 0.75rem;
   color: var(--color-muted);
+}
+
+/* ===== JD Analysis Card ===== */
+.jdAnalysisCard {
+  border-radius: var(--radius-lg);
+  border: 1px solid var(--color-line);
+  background: white;
+  padding: var(--space-4);
+}
+
+.jdAnalysisTitle {
+  font-size: 0.875rem;
+  font-weight: 600;
+  margin-bottom: var(--space-2);
+}
+
+.jdAnalysisSummary {
+  font-size: 0.8125rem;
+  line-height: 1.6;
+  color: var(--color-muted);
+  margin-bottom: var(--space-3);
+}
+
+.examPointTags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-2);
+}
+
+.examPointTag {
+  display: inline-flex;
+  align-items: center;
+  border-radius: var(--radius-md);
+  background: var(--color-brand-10);
+  padding: var(--space-1) var(--space-2);
+  font-size: 0.75rem;
+  color: var(--color-brand);
+  font-weight: 500;
+}
+
+/* ===== Expandable Answer ===== */
+.expandToggle {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-1);
+  padding: var(--space-1) var(--space-2);
+  border: none;
+  border-radius: var(--radius-md);
+  background: var(--color-panel);
+  color: var(--color-brand);
+  font-size: 0.8125rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: background 0.15s;
+}
+
+.expandToggle:hover {
+  background: var(--color-brand-10);
+}
+
+.expandIconClosed {
+  transition: transform 0.2s;
+}
+
+.expandIconOpen {
+  transform: rotate(180deg);
+  transition: transform 0.2s;
+}
+
+.answerContent {
+  margin-top: var(--space-3);
+  padding: var(--space-3);
+  border-radius: var(--radius-md);
+  background: var(--color-panel);
+  font-size: 0.8125rem;
+  line-height: 1.7;
+  color: var(--color-text);
+  border-left: 3px solid var(--color-brand);
 }
 
 /* ===== Review Artifact ===== */

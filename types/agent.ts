@@ -69,18 +69,17 @@ export interface InterviewQuestion {
   id: string;
   question: string;
   focus: string;
-  answer?: string;
-  feedback?: string;
-  followUp?: string;
+  answer: string;
 }
 
 export interface InterviewArtifact {
   type: "interview";
   title: string;
-  currentIndex: number;
-  status: "ready" | "in_progress" | "completed";
+  jdAnalysis: {
+    summary: string;
+    examPoints: string[];
+  };
   questions: InterviewQuestion[];
-  finalReview?: ReviewArtifact;
 }
 
 export interface ReviewArtifact {

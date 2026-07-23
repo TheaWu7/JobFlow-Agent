@@ -1,56 +1,79 @@
 "use client";
 
-import { MessageSquareText } from "lucide-react";
+import { useState } from "react";
+import { MessageSquareText, ChevronDown } from "lucide-react";
 import type { InterviewArtifact } from "@/types/agent";
-import { PanelTitle, TextBlock } from "./shared";
-import { ReviewArtifactView } from "./ReviewArtifactView";
+import { PanelTitle } from "./shared";
 import styles from "../ArtifactPanel.module.css";
 
 export function InterviewArtifactView({ artifact }: { artifact: InterviewArtifact }) {
-  const current = artifact.questions[artifact.currentIndex];
+  const [expandedIds, setExpandedIds] = useState<Set<string>>(new Set());
+
+  function toggleAnswer(id: string) {
+    setExpandedIds((prev) => {
+      const next = new Set(prev);
+      if (next.has(id)) {
+        next.delete(id);
+      } else {
+        next.add(id);
+      }
+      return next;
+    });
+  }
+
   return (
     <section className={styles.section}>
       <PanelTitle icon={<MessageSquareText size={20} />} title={artifact.title} />
-      <div className={styles.card}>
-        <div className={styles.progressHeader}>
-          <span className={styles.progressLabel}>当前进度</span>
-          <span className={styles.progressCount}>
-            {artifact.currentIndex + 1} / {artifact.questions.length}
-          </span>
-        </div>
-        <div className={styles.progressBar}>
-          <div
-            className={styles.progressBarFill}
-            style={{ width: `${((artifact.currentIndex + 1) / artifact.questions.length) * 100}%` }}
-          />
+
+      {/* JD Analysis Card */}
+      <div className={styles.jdAnalysisCard}>
+        <h3 className={styles.jdAnalysisTitle}>JD 考察方向分析</h3>
+        <p className={styles.jdAnalysisSummary}>{artifact?.jdAnalysis?.summary}</p>
+        <div className={styles.examPointTags}>
+          {artifact?.jdAnalysis?.examPoints?.map((point) => (
+            <span key={point} className={styles.examPointTag}>
+              {point}
+            </span>
+          ))}
         </div>
       </div>
-      {current && (
-        <div className={styles.currentQuestion}>
-          <p className={styles.currentQuestionLabel}>Question</p>
-          <h3 className={styles.currentQuestionText}>{current.question}</h3>
-          <p className={styles.currentQuestionFocus}>考察点：{current.focus}</p>
-        </div>
-      )}
+
+      {/* Question Cards */}
       <div className={styles.questionList}>
-        {artifact.questions.map((question, index) => (
-          <div key={question.id} className={styles.questionCard}>
-            <div className={styles.questionRow}>
-              <span className={styles.questionNumber}>
-                {index + 1}
-              </span>
-              <div className={styles.questionContent}>
-                <p className={styles.questionText}>{question.question}</p>
-                <p className={styles.questionFocus}>{question.focus}</p>
-                {question.answer && <TextBlock label="你的回答" text={question.answer} />}
-                {question.feedback && <TextBlock label="实时点评" text={question.feedback} strong />}
-                {question.followUp && <TextBlock label="追问" text={question.followUp} />}
+        {artifact.questions.map((q, index) => {
+          const isExpanded = expandedIds.has(q.id);
+          return (
+            <div key={q.id} className={styles.questionCard}>
+              <div className={styles.questionRow}>
+                <span className={styles.questionNumber}>{index + 1}</span>
+                <div className={styles.questionContent}>
+                  <p className={styles.questionText}>{q.question}</p>
+                  <div className={styles.questionMetaWrap}>
+                    <span className={styles.questionFocus}>考察点：{q.focus}</span>
+                    {/* Expandable Answer */}
+                    <button
+                      type="button"
+                      className={styles.expandToggle}
+                      onClick={() => toggleAnswer(q.id)}
+                    >
+                      <span>推荐答案</span>
+                      <ChevronDown
+                        size={16}
+                        className={isExpanded ? styles.expandIconOpen : styles.expandIconClosed}
+                      />
+                    </button>
+                  </div>
+                  {isExpanded && (
+                    <div className={styles.answerContent}>
+                      <p>{q.answer}</p>
+                    </div>
+                  )}
+                </div>
               </div>
             </div>
-          </div>
-        ))}
+          );
+        })}
       </div>
-      {artifact.finalReview && <ReviewArtifactView artifact={artifact.finalReview} compact />}
     </section>
   );
 }

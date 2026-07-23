@@ -48,18 +48,8 @@ export function createTrace(decision: AgentDecision): AgentTraceStep[] {
 
 export function decideTask(
   input: string,
-  context: WorkspaceContext,
-  activeInterview: boolean
+  context: WorkspaceContext
 ): AgentDecision {
-  if (activeInterview && input.trim() && !looksLikeNewTask(input)) {
-    return {
-      task: "interview",
-      intendedTask: "interview",
-      missing: [],
-      userPrompt: input
-    };
-  }
-
   const matched = taskPatterns.find((item) => item.tests.some((test) => test.test(input)));
   const task = matched?.task ?? inferTaskFromContext(input);
   const missing = missingMaterials(task, context);

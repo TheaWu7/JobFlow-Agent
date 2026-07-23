@@ -18,7 +18,7 @@ const ARTIFACT_SCHEMA: Record<string, string> = {
   resume:
     "{type:\"resume\",title,jdSummary:{role,seniority,mustHave,niceToHave},matchScore,strengths,gaps,optimizations:[{section,before,after,reason}]}",
   interview:
-    "{type:\"interview\",title,currentIndex,status,questions:[{id,question,focus,answer,feedback,followUp}],finalReview?}",
+    "{type:\"interview\",title,jdAnalysis:{summary,examPoints},questions:[{id,question,focus,answer}]}",
   review:
     "{type:\"review\",title,overallScore,dimensionScores:[{name,score,evidence}],weaknessTags,improvements,practicePlan}",
 };

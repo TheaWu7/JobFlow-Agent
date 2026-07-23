@@ -26,7 +26,6 @@ import type {
   Artifact,
   ChatMessage,
   ClarifyArtifact,
-  InterviewArtifact,
   StreamEvent,
   TaskType,
   UploadedAttachment,
@@ -47,7 +46,6 @@ export default function WorkspacePage() {
   const [mobileView, setMobileView] = useState<"chat" | "artifact">("chat");
   const scrollRef = useRef<HTMLDivElement>(null);
 
-  const activeInterview = artifact?.type === "interview" && artifact.status === "in_progress";
   const readyAttachments = useMemo(
     () => attachments.filter((item) => item.status === "ready"),
     [attachments]
@@ -162,13 +160,10 @@ export default function WorkspacePage() {
     }
 
     const mergedContext = mergeContextFromInput(context, trimmed, readyAttachments, classified);
-    if (artifact?.type === "interview") {
-      mergedContext.interview = artifact;
-    }
     setContext(mergedContext);
 
     const effectiveInput = pendingTask ? `${taskLabel(pendingTask)}\n${trimmed}` : trimmed;
-    const decision = decideTask(effectiveInput, mergedContext, activeInterview);
+    const decision = decideTask(effectiveInput, mergedContext);
     setTrace(createTrace(decision));
 
     if (decision.task === "clarify") {
@@ -287,12 +282,6 @@ export default function WorkspacePage() {
     }
     if (eventData.type === "artifact") {
       setArtifact(eventData.artifact);
-      if (eventData.artifact.type === "interview") {
-        setContext((current) => ({
-          ...current,
-          interview: eventData.artifact as InterviewArtifact,
-        }));
-      }
       if (eventData.artifact.type !== "clarify") {
         saveArtifactToHistory(eventData.artifact, historySummary(eventData.artifact));
       }
@@ -378,9 +367,9 @@ function historySummary(artifact: Artifact) {
       Array.isArray(artifact.optimizations) ? artifact.optimizations.length : 0
     } 条优化建议`;
   if (artifact.type === "interview")
-    return `${Array.isArray(artifact.questions) ? artifact.questions.length : 0} 道题，状态：${
-      artifact.status
-    }`;
+    return `${
+      Array.isArray(artifact.questions) ? artifact.questions.length : 0
+    } 道面试准备题目`;
   if (artifact.type === "review")
     return `综合评分 ${artifact.overallScore}，${
       Array.isArray(artifact.weaknessTags) ? artifact.weaknessTags.length : 0
