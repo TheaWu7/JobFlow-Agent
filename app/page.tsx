@@ -114,6 +114,10 @@ export default function WorkspacePage() {
     setIsReadingFiles(false);
   }
 
+  function handleRemoveAttachment(id: string) {
+    setAttachments((current) => current.filter((a) => a.id !== id));
+  }
+
   async function handleSubmit(event: FormEvent) {
     event.preventDefault();
     if (isStreaming) return;
@@ -341,6 +345,7 @@ export default function WorkspacePage() {
           onInputChange={setInput}
           onSubmit={handleSubmit}
           onFileChange={handleFileChange}
+          onRemoveAttachment={handleRemoveAttachment}
         />
       </section>
 

@@ -1,7 +1,7 @@
 "use client";
 
 import { FormEvent } from "react";
-import { Loader2, Paperclip, Send, UploadCloud } from "lucide-react";
+import { Loader2, Paperclip, Send, UploadCloud, X } from "lucide-react";
 import { cn } from "@/lib/utils";
 import type { UploadedAttachment } from "@/types/agent";
 import styles from "../app/page.module.css";
@@ -14,6 +14,7 @@ export function ChatInput({
   onInputChange,
   onSubmit,
   onFileChange,
+  onRemoveAttachment
 }: {
   attachments: UploadedAttachment[];
   isStreaming: boolean;
@@ -22,6 +23,7 @@ export function ChatInput({
   onInputChange: (value: string) => void;
   onSubmit: (e: FormEvent) => void;
   onFileChange: (files: FileList | null) => void;
+  onRemoveAttachment: (id: string) => void;
 }) {
   return (
     <form onSubmit={onSubmit} className={styles.inputForm}>
@@ -30,6 +32,14 @@ export function ChatInput({
           {attachments.map((file) => (
             <span key={file.id} className={cn(styles.attachmentChip, file.status === "ready" ? styles.attachmentChipReady : styles.attachmentChipError)}>
               {file.name}
+              <button
+                type="button"
+                className={styles.attachmentRemove}
+                onClick={() => onRemoveAttachment(file.id)}
+                title="移除附件"
+              >
+                <X size={14} />
+              </button>
             </span>
           ))}
         </div>
@@ -55,13 +65,16 @@ export function ChatInput({
               type="file"
               multiple
               accept=".txt,.md,.pdf,.docx"
-              onChange={(event) => onFileChange(event.target.files)}
+              onChange={(event) => {
+                onFileChange(event.target.files);
+                event.target.value = "";
+              }}
             />
           </label>
           <button
             className={styles.sendButton}
             type="submit"
-            disabled={isStreaming || isReadingFiles || !input.trim()}
+            disabled={isStreaming || isReadingFiles || (!input.trim() && attachments.length === 0)}
             title="发送"
           >
             {isStreaming ? <Loader2 size={18} className="animate-spin" /> : <Send size={18} />}

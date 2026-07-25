@@ -360,6 +360,23 @@
   color: var(--color-accent);
 }
 
+.attachmentRemove {
+  margin-left: var(--space-1);
+  padding: 0;
+  border: none;
+  background: transparent;
+  cursor: pointer;
+  opacity: 0.6;
+  color: inherit;
+  display: inline-flex;
+  align-items: center;
+  vertical-align: middle;
+}
+
+.attachmentRemove:hover {
+  opacity: 1;
+}
+
 .inputRow {
   position: relative;
   width: 100%;
