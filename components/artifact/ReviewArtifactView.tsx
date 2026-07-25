@@ -4,7 +4,7 @@ import { CheckCircle2 } from "lucide-react";
 import type { ReviewArtifact } from "@/types/agent";
 import { clamp } from "@/lib/utils";
 import { PanelTitle, ScoreCard, TwoColumn } from "./shared";
-import { Markdown } from "../common/Markdown/Markdown";
+import { Markdown } from "../Markdown";
 import styles from "../ArtifactPanel.module.css";
 
 function normalizeScore(score: number) {

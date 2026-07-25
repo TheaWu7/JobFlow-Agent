@@ -2,10 +2,10 @@
 
 import { FormEvent, useEffect, useMemo, useRef, useState } from "react";
 import { Sparkles } from "lucide-react";
-import { ArtifactPanel } from "@/components/artifact/ArtifactPanel/ArtifactPanel";
-import { ChatInput } from "@/components/chat/ChatInput";
-import { ChatPanelHeader } from "@/components/chat/ChatPanelHeader";
-import { MessageList } from "@/components/chat/MessageList";
+import { ArtifactPanel } from "@/components/ArtifactPanel";
+import { ChatInput } from "@/components/ChatInput";
+import { ChatPanelHeader } from "@/components/ChatPanelHeader";
+import { MessageList } from "@/components/MessageList";
 import {
   buildClarifyMessage,
   createTrace,

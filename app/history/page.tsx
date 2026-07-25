@@ -5,7 +5,7 @@ import { Clock, FileClock, Trash2 } from "lucide-react";
 import { clearHistory, loadHistory } from "@/lib/history";
 import type { HistoryRecord } from "@/types/agent";
 import styles from "./history.module.css";
-import { JsonBlock } from "@/components/common/JsonBlock/JsonBlock";
+import { JsonBlock } from "@/components/JsonBlock";
 
 export default function HistoryPage() {
   const [records, setRecords] = useState<HistoryRecord[]>([]);
