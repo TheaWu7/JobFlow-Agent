@@ -199,30 +199,32 @@
 
 /* ===== Trace ===== */
 .trace {
-  border-top: 1px solid var(--color-line);
-  background: var(--color-panel-60);
   padding: var(--space-3) var(--space-4);
 }
 
 .traceCollapsed {
-  padding: var(--space-1) var(--space-4);
+  padding: var(--space-1);
 }
 
 .traceHeader {
   display: flex;
   align-items: center;
-  justify-content: space-between;
   margin-bottom: var(--space-2);
+  opacity: 0.8;
 }
 
 .traceCollapsed .traceHeader {
   margin-bottom: 0;
 }
 
+.traceHeaderCompact {
+  margin-bottom: 0;
+  padding: var(--space-1) 0;
+}
+
 .traceTitle {
   margin: 0;
   font-size: 0.75rem;
-  font-weight: 600;
   text-transform: uppercase;
   color: var(--color-muted);
 }
@@ -237,6 +239,7 @@
   cursor: pointer;
   border-radius: var(--radius-md);
   transition: transform 0.2s;
+  opacity: 0.8;
 }
 
 .traceToggle:hover {
@@ -260,7 +263,7 @@
   height: 1.125rem;
   pointer-events: none;
   z-index: 1;
-  background: linear-gradient(to bottom, var(--color-panel), transparent);
+  background: linear-gradient(to bottom, var(--color-white-88), transparent);
 }
 
 .traceList {

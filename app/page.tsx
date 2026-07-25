@@ -6,7 +6,6 @@ import { ArtifactPanel } from "@/components/ArtifactPanel";
 import { ChatInput } from "@/components/ChatInput";
 import { ChatPanelHeader } from "@/components/ChatPanelHeader";
 import { MessageList } from "@/components/MessageList";
-import { TraceList } from "@/components/TraceList";
 import {
   buildClarifyMessage,
   createTrace,
@@ -330,10 +329,8 @@ export default function WorkspacePage() {
 
         {/* Messages */}
         <div ref={scrollRef} className={styles.messagesArea}>
-          <MessageList messages={messages} isStreaming={isStreaming} />
+          <MessageList messages={messages} isStreaming={isStreaming} trace={trace} />
         </div>
-
-        <TraceList trace={trace} />
 
         {/* Input Form */}
         <ChatInput
