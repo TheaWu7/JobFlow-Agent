@@ -3,9 +3,9 @@
 import { memo } from "react";
 import { AlertCircle, ClipboardList } from "lucide-react";
 import type { Artifact } from "@/types/agent";
-import { ResumeArtifactView } from "./artifact/ResumeArtifactView";
-import { InterviewArtifactView } from "./artifact/InterviewArtifactView";
-import { ReviewArtifactView } from "./artifact/ReviewArtifactView";
+import { ResumeArtifactView } from "../ResumeArtifactView";
+import { InterviewArtifactView } from "../InterviewArtifactView";
+import { ReviewArtifactView } from "../ReviewArtifactView";
 import styles from "./ArtifactPanel.module.css";
 
 export const ArtifactPanel = memo(function ArtifactPanel({ artifact }: { artifact: Artifact | null }) {

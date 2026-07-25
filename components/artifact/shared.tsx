@@ -2,7 +2,7 @@
 
 import type React from "react";
 import { clamp } from "@/lib/utils";
-import { Markdown } from "../Markdown";
+import { Markdown } from "../common/Markdown/Markdown";
 import styles from "../ArtifactPanel.module.css";
 
 export function PanelTitle({ icon, title }: { icon: React.ReactNode; title: string }) {

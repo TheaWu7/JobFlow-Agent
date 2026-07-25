@@ -4,7 +4,7 @@ import { useState } from "react";
 import { MessageSquareText, ChevronDown } from "lucide-react";
 import type { InterviewArtifact } from "@/types/agent";
 import { PanelTitle } from "./shared";
-import { Markdown } from "../Markdown";
+import { Markdown } from "../common/Markdown/Markdown";
 import styles from "../ArtifactPanel.module.css";
 
 export function InterviewArtifactView({ artifact }: { artifact: InterviewArtifact }) {
