@@ -7,16 +7,17 @@ interface ClassifyRequest {
 }
 
 interface ClassifyResult {
-  type: "jd" | "resume" | "project" | "unknown";
+  type: "jd" | "resume" | "project" | "interview" | "unknown";
   text: string;
 }
 
 const CLASSIFY_PROMPT = `你是一个文本分类与拆分器。对每段文本做两件事：分类 + 拆分。
 
-类型只有四种：
+类型有五种：
 - jd：职位描述、岗位要求
 - resume：个人简历、工作经历
 - project：项目介绍
+- interview：面试对话记录、面试问答
 - unknown：都不是
 
 关键规则：
@@ -47,7 +48,7 @@ export async function POST(request: Request) {
 async function classifyWithLLM(pieces: string[]): Promise<ClassifyResult[]> {
   const apiKey = process.env.DEEPSEEK_API_KEY;
   const baseUrl = process.env.DEEPSEEK_BASE_URL || "https://api.deepseek.com";
-  const model = process.env.DEEPSEEK_MODEL || "deepseek-chat";
+  const model = process.env.DEEPSEEK_MODEL || "deepseek-v4-pro";
 
   if (!apiKey) {
     console.warn("classify: no API key, fallback to regex");

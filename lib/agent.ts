@@ -21,7 +21,7 @@ const taskPatterns: Array<{ task: TaskType; tests: RegExp[] }> = [
   },
   {
     task: "review",
-    tests: [/(复盘|总结|分析).*面试/, /(短板|评分|改进)/]
+    tests: [/(复盘|总结|分析).*面试/, /面试.*(复盘|总结|分析)/, /(短板|评分|改进)/, /面试.*(记录|对话|过程)/]
   }
 ];
 
@@ -66,7 +66,7 @@ export function mergeContextFromInput(
   previous: WorkspaceContext,
   input: string,
   attachments: UploadedAttachment[],
-  classified?: Array<{ type: "jd" | "resume" | "project" | "unknown"; text: string }>
+  classified?: Array<{ type: "jd" | "resume" | "project" | "interview" | "unknown"; text: string }>
 ): WorkspaceContext {
   const next = { ...previous };
 
@@ -79,6 +79,8 @@ export function mergeContextFromInput(
         next.resume = item.text;
       } else if (item.type === "project") {
         next.project = item.text;
+      } else if (item.type === "interview") {
+        next.interview = item.text;
       }
       // unknown: skip
     }
@@ -136,8 +138,11 @@ export function messagesToTranscript(messages: ChatMessage[]) {
 }
 
 function inferTaskFromContext(input: string): TaskType {
-  if (/面试|回答|追问/.test(input)) {
+  if (/(开始|模拟|准备|来).*面试|面试准备|mock interview/i.test(input)) {
     return "interview";
+  }
+  if (/复盘/.test(input)) {
+    return "review";
   }
   if (/JD|岗位|职位|简历|resume|cv/i.test(input)) {
     return "resume";
@@ -151,9 +156,6 @@ function missingMaterials(task: TaskType, context: WorkspaceContext) {
   }
   if (task === "interview") {
     return [!context.jd && "jd", !context.resume && "resume"].filter(Boolean) as Array<"jd" | "resume">;
-  }
-  if (task === "review") {
-    return [!context.interview && "interview"].filter(Boolean) as Array<"interview">;
   }
   return [];
 }

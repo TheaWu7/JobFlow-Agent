@@ -34,7 +34,7 @@ export interface WorkspaceContext {
   jd?: string;
   resume?: string;
   project?: string;
-  interview?: InterviewArtifact;
+  interview?: string | InterviewArtifact;
   lastTask?: TaskType;
 }
 

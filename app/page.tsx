@@ -135,7 +135,7 @@ export default function WorkspacePage() {
 
     const pieces = [trimmed, ...readyAttachments.map((a) => a.text)].filter(Boolean);
     let classified:
-      | Array<{ type: "jd" | "resume" | "project" | "unknown"; text: string }>
+      | Array<{ type: "jd" | "resume" | "project" | "interview" | "unknown"; text: string }>
       | undefined;
 
     if (pieces.length) {
