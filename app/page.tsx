@@ -32,6 +32,14 @@ import type {
 } from "@/types/agent";
 import styles from "./page.module.css";
 
+const defaultGreeting: ChatMessage = {
+  id: uid("msg"),
+  role: "assistant",
+  content:
+    "你好，我是 JobFlow-Agent。直接告诉我你要做什么，或粘贴 JD、简历、项目材料，我会自动判断任务并在右侧生成结果。",
+  createdAt: new Date().toISOString(),
+};
+
 export default function WorkspacePage() {
   const [messages, setMessages] = useState<ChatMessage[]>([]);
   const [input, setInput] = useState("");
@@ -56,15 +64,7 @@ export default function WorkspacePage() {
     if (draft.messages.length) {
       setMessages(draft.messages);
     } else {
-      setMessages([
-        {
-          id: uid("msg"),
-          role: "assistant",
-          content:
-            "你好，我是 JobFlow-Agent。直接告诉我你要做什么，或粘贴 JD、简历、项目材料，我会自动判断任务并在右侧生成结果。",
-          createdAt: new Date().toISOString(),
-        },
-      ]);
+      setMessages([defaultGreeting]);
     }
     setInput(draft.input);
     setAttachments(draft.attachments);
@@ -197,12 +197,12 @@ export default function WorkspacePage() {
   }
 
   function handleReset() {
-    try {
-      clearWorkspaceDraft();
-      if (typeof window !== "undefined") {
-        window.dispatchEvent(new Event("interviewflow-workspace-updated"));
-      }
-    } catch {}
+try {
+    clearWorkspaceDraft();
+        if (typeof window !== "undefined") {
+      window.dispatchEvent(new Event("interviewflow-workspace-updated"));
+    }
+} catch {}
   }
 
   async function runAgent(
