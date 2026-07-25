@@ -99,7 +99,7 @@ async function streamDeepSeek(body: ChatRequest, send: (payload: unknown) => voi
       const delta = parsed?.choices?.[0]?.delta?.content;
       if (delta) {
         accumulated += delta;
-        const visible = accumulated.split(/```json/i)[0];
+        const visible = accumulated.split(/\n```/)[0];
         if (visible.length > visibleLength) {
           send({ type: "delta", text: visible.slice(visibleLength) });
           visibleLength = visible.length;
