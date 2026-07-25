@@ -21,9 +21,11 @@ export function MessageList({
     <>
       {messages.map((message, i) => {
         const isLastAssistant = i === lastIndex && message.role === "assistant" && trace.length > 0;
+        const isEmptyStreamingBubble = isLastAssistant && !message.content;
         return (
           <div key={message.id}>
             {isLastAssistant && <TraceList trace={trace} />}
+            {!isEmptyStreamingBubble && (
             <div className={cn(styles.messageRow, message.role === "user" ? styles.messageRowUser : styles.messageRowAssistant)}>
               <div
                 className={cn(
@@ -45,6 +47,7 @@ export function MessageList({
                 ) : null}
               </div>
             </div>
+            )}
           </div>
         );
       })}
