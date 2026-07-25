@@ -82,6 +82,12 @@ export interface InterviewArtifact {
   questions: InterviewQuestion[];
 }
 
+export interface ReviewQuestion {
+  question: string;
+  deeperMeaning: string;
+  idealAnswer: string;
+}
+
 export interface ReviewArtifact {
   type: "review";
   title: string;
@@ -94,6 +100,7 @@ export interface ReviewArtifact {
   weaknessTags: string[];
   improvements: string[];
   practicePlan: string[];
+  questions: ReviewQuestion[];
 }
 
 export interface ClarifyArtifact {

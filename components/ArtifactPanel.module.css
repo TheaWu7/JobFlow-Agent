@@ -487,6 +487,68 @@
   color: var(--color-muted);
 }
 
+/* ===== Review Questions ===== */
+.reviewQuestionList {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+  margin-top: var(--space-3);
+}
+
+.reviewQuestionCard {
+  border-radius: var(--radius-md);
+  border: 1px solid var(--color-line);
+  background: var(--color-panel);
+  padding: var(--space-3);
+}
+
+.reviewQuestionHeader {
+  display: flex;
+  align-items: flex-start;
+  gap: var(--space-3);
+  margin-bottom: var(--space-3);
+}
+
+.reviewQuestionNum {
+  display: flex;
+  height: 1.5rem;
+  width: 1.5rem;
+  flex-shrink: 0;
+  align-items: center;
+  justify-content: center;
+  border-radius: var(--radius-sm);
+  background: var(--color-brand);
+  color: white;
+  font-size: 0.75rem;
+  font-weight: 600;
+}
+
+.reviewQuestionText {
+  line-height: 1.5;
+}
+
+.reviewQuestionBody {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+}
+
+.reviewSection {
+  padding: var(--space-3);
+  border-radius: var(--radius-sm);
+  background: white;
+  border: 1px solid var(--color-line);
+}
+
+.reviewSectionLabel {
+  font-size: 0.75rem;
+  font-weight: 600;
+  color: var(--color-brand);
+  margin-bottom: var(--space-2);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
 /* ===== Project Artifact ===== */
 .starCard {
   border-radius: var(--radius-lg);

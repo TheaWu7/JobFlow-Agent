@@ -125,5 +125,27 @@ const DEMO_REVIEW_ARTIFACT: ReviewArtifact = {
   weaknessTags: ["异常处理表达不足", "指标量化偏少", "技术取舍可再具体"],
   improvements: ["准备 2 个模型输出失败的降级案例", "把项目收益改写成可量化指标", "每题用背景-动作-结果收束"],
   practicePlan: ["每天复述项目 3 分钟版本", "针对 SSE、Artifact、workflow 各准备一道追问", "录音检查是否有空泛表达"],
+  questions: [
+    {
+      question: "你为什么选择单入口 Agent，而不是传统多功能页面？",
+      deeperMeaning: "这道题表面在问产品形态选择，实际考察三层能力：① 你对用户问题的定义方式——是'功能堆叠思维'还是'问题导向思维'；② 架构取舍的 trade-off 意识——单入口带来的复杂度（意图识别、状态管理）是否在你的考虑范围内；③ 产品判断力——能不能把技术决策翻译成用户体验价值。",
+      idealAnswer: "传统多页面把每个能力做成独立入口，用户需要先理解有哪些功能才能操作。我在设计时想验证一个假设：求职者不需要学习工具，工具应该适应求职者。单入口 Agent 把自然语言作为唯一界面，系统自动判断任务类型、校验素材、编排 workflow。代价是意图识别和状态管理变复杂了，但收益是认知负担降到最低——尤其面试场景下，这个设计本身就是产品判断力的展示。",
+    },
+    {
+      question: "SSE 在这个项目里解决了什么体验问题？",
+      deeperMeaning: "面试官在测你能否区分'用技术'和'理解技术解决的问题'。SSE 本身不是亮点——亮点是你如何把它放进用户体验的完整链路里，以及为什么不是 WebSocket。",
+      idealAnswer: "三个问题。第一是感知问题：流式输出让用户看到文字逐字出现，感知系统在工作而不是卡死。第二是架构问题：我在 SSE 事件流上拆了三个通道——delta 驱动聊天、trace 驱动步骤条、artifact 驱动结构化面板——三个通道同时推进互不阻塞。第三是安全：服务端代理保护了 API Key。至于为什么不用 WebSocket——这个场景是单向推送，SSE 更简单、原生支持、自动重连，够用。",
+    },
+    {
+      question: "如果 DeepSeek 返回的 JSON 被截断，你会如何保证面板仍然可用？",
+      deeperMeaning: "这道题测两件事：一是你有没有想过模型输出的'最坏情况'，二是你的容错设计有没有落到代码层面（而不是停留在概念）。面试官期待听到具体的 fallback 链路。",
+      idealAnswer: "三层防护。模型层：system prompt 约束 JSON schema，减少非法输出概率。解析层：safeJsonParse 三级 fallback——先直接 parse，失败用正则提取 markdown fenced block，再失败用花括号匹配截取。展示层：即使最终解析失败，组件侧有 Array.isArray 守卫，不会白屏崩溃——展示错误卡片告诉用户出了什么问题。实际测试中这三层覆盖了 95% 以上的异常场景。",
+    },
+    {
+      question: "如果要扩展到多模型供应商，你会怎么改？",
+      deeperMeaning: "典型的扩展性设计题。面试官不关心你具体写什么代码，关心的是抽象能力——你能不能把差异封装起来、让上层无感。还隐含了一个考点：你是不是只学会了调 API，还是理解了架构。",
+      idealAnswer: "引入 provider adapter 模式。定义 ModelProvider 接口——{ stream(req): AsyncIterable<StreamEvent> }——每个供应商各自实现。选择逻辑通过环境变量 + Settings 控制。关键是前端 SSE 事件格式不变，所有 adapter 输出统一为 delta/trace/artifact/done/error。prompt 兼容性在 adapter 层处理——不同模型对 system prompt 和 JSON 服从度不同，需要做模板化和后处理。这样加一个新供应商只需要写一个 adapter，上层零改动。",
+    },
+  ],
 };
 

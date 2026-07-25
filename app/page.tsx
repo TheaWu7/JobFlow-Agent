@@ -371,7 +371,7 @@ function historySummary(artifact: Artifact) {
       Array.isArray(artifact.questions) ? artifact.questions.length : 0
     } 道面试准备题目`;
   if (artifact.type === "review")
-    return `综合评分 ${artifact.overallScore}，${
+    return `综合评分 ${artifact.overallScore <= 10 ? artifact.overallScore * 10 : artifact.overallScore}，${
       Array.isArray(artifact.weaknessTags) ? artifact.weaknessTags.length : 0
     } 个短板标签`;
 

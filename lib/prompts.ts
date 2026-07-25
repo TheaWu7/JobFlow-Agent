@@ -20,7 +20,7 @@ const ARTIFACT_SCHEMA: Record<string, string> = {
   interview:
     "{type:\"interview\",title,jdAnalysis:{summary,examPoints},questions:[{id,question,focus,answer}]}",
   review:
-    "{type:\"review\",title,overallScore,dimensionScores:[{name,score,evidence}],weaknessTags,improvements,practicePlan}",
+    "{type:\"review\",title,overallScore,dimensionScores:[{name,score,evidence}],weaknessTags,improvements,practicePlan,questions:[{question,deeperMeaning,idealAnswer}]}",
 };
 
 export function buildUserPrompt(body: {
