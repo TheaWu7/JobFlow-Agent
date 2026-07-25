@@ -22,7 +22,7 @@ export default function HistoryPage() {
         <div className={styles.header}>
         <div>
           <h1 className={styles.title}>History</h1>
-          <p className={styles.subtitle}>最近的 JD 解析、简历优化、面试记录和项目脚本。这里只读查看，不发起业务任务。</p>
+          <p className={styles.subtitle}>最近的 JD 解析、简历优化和面试复盘记录。</p>
         </div>
         <button
           className={styles.clearButton}
@@ -49,7 +49,6 @@ export default function HistoryPage() {
             <article key={record.id} className={styles.card}>
               <div className={styles.cardHeader}>
                 <div>
-                  <span className={styles.typeBadge}>{record.type}</span>
                   <h2 className={styles.cardTitle}>{record.title}</h2>
                   <p className={styles.cardSummary}>{record.summary}</p>
                 </div>

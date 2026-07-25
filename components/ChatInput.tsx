@@ -35,19 +35,9 @@ export function ChatInput({
         </div>
       )}
       <div className={styles.inputRow}>
-        <label className={styles.fileUploadButton} title="上传素材">
-          {isReadingFiles ? <Loader2 size={16} className="animate-spin" /> : <Paperclip size={16} />}
-          <input
-            className={styles.fileInput}
-            type="file"
-            multiple
-            accept=".txt,.md,.pdf,.docx"
-            onChange={(event) => onFileChange(event.target.files)}
-          />
-        </label>
         <textarea
           className={styles.textarea}
-          placeholder="例如：帮我针对这个前端 JD 优化简历，然后粘贴 JD 和简历内容..."
+          placeholder="发送消息"
           value={input}
           onChange={(event) => onInputChange(event.target.value)}
           onKeyDown={(event) => {
@@ -57,18 +47,26 @@ export function ChatInput({
             }
           }}
         />
-        <button
-          className={styles.sendButton}
-          type="submit"
-          disabled={isStreaming || isReadingFiles}
-          title="发送"
-        >
-          {isStreaming ? <Loader2 size={16} className="animate-spin" /> : <Send size={16} />}
-        </button>
-      </div>
-      <div className={styles.inputFooter}>
-        <UploadCloud className={styles.footerIcon} />
-        支持 txt、md、pdf、docx；业务任务仍由聊天内容触发。
+        <div className={styles.inputActions}>
+          <label className={styles.fileUploadButton} title="上传素材">
+            {isReadingFiles ? <Loader2 size={18} className="animate-spin" /> : <Paperclip size={18} />}
+            <input
+              className={styles.fileInput}
+              type="file"
+              multiple
+              accept=".txt,.md,.pdf,.docx"
+              onChange={(event) => onFileChange(event.target.files)}
+            />
+          </label>
+          <button
+            className={styles.sendButton}
+            type="submit"
+            disabled={isStreaming || isReadingFiles || !input.trim()}
+            title="发送"
+          >
+            {isStreaming ? <Loader2 size={18} className="animate-spin" /> : <Send size={18} />}
+          </button>
+        </div>
       </div>
     </form>
   );
