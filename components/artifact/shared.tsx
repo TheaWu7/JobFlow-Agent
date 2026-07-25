@@ -2,6 +2,7 @@
 
 import type React from "react";
 import { clamp } from "@/lib/utils";
+import { Markdown } from "../Markdown";
 import styles from "../ArtifactPanel.module.css";
 
 export function PanelTitle({ icon, title }: { icon: React.ReactNode; title: string }) {
@@ -98,7 +99,9 @@ export function TextBlock({
   return (
     <div className={styles.textBlock}>
       <p className={styles.textBlockLabel}>{label}</p>
-      <p className={`${styles.textBlockContent} ${strong ? styles.textBlockContentStrong : ""}`}>{text}</p>
+      <div className={`${styles.textBlockContent} ${strong ? styles.textBlockContentStrong : ""}`}>
+        <Markdown>{text}</Markdown>
+      </div>
     </div>
   );
 }

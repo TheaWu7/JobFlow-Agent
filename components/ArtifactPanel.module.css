@@ -415,6 +415,11 @@
   font-weight: 500;
   cursor: pointer;
   transition: background 0.15s;
+  
+  min-width: 80px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
 .expandToggle:hover {

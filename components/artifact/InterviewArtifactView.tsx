@@ -4,6 +4,7 @@ import { useState } from "react";
 import { MessageSquareText, ChevronDown } from "lucide-react";
 import type { InterviewArtifact } from "@/types/agent";
 import { PanelTitle } from "./shared";
+import { Markdown } from "../Markdown";
 import styles from "../ArtifactPanel.module.css";
 
 export function InterviewArtifactView({ artifact }: { artifact: InterviewArtifact }) {
@@ -65,7 +66,7 @@ export function InterviewArtifactView({ artifact }: { artifact: InterviewArtifac
                   </div>
                   {isExpanded && (
                     <div className={styles.answerContent}>
-                      <p>{q.answer}</p>
+                      <Markdown>{q.answer}</Markdown>
                     </div>
                   )}
                 </div>

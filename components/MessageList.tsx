@@ -2,6 +2,7 @@
 
 import { cn } from "@/lib/utils";
 import type { ChatMessage } from "@/types/agent";
+import { Markdown } from "./Markdown";
 import styles from "../app/page.module.css";
 
 export function MessageList({
@@ -14,14 +15,16 @@ export function MessageList({
   return (
     <>
       {messages.map((message) => (
-        <div key={message.id} className={cn(styles.messageRow, message.role === "user" ? styles.messageRowUser : styles.messageRowAssistant)}>
+        <div key={message.id} className={cn(styles.messageRow,message.role === "user" ? styles.messageRowUser : styles.messageRowAssistant)}>
           <div
             className={cn(
               styles.messageBubble,
               message.role === "user" ? styles.messageBubbleUser : styles.messageBubbleAssistant
             )}
           >
-            <p className={styles.messageText}>{message.content || (isStreaming ? " " : "")}</p>
+            <div className={styles.messageText}>
+              <Markdown>{message.content || (isStreaming ? " " : "")}</Markdown>
+            </div>
             {message.attachments?.length ? (
               <div className={styles.attachmentList}>
                 {message.attachments.map((file) => (
