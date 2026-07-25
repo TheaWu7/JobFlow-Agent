@@ -131,18 +131,3 @@
   font-size: 0.75rem;
   color: var(--color-muted);
 }
-
-.jsonBlock {
-  margin-top: var(--space-4);
-  max-height: 18rem;
-  overflow-y: auto;
-  overflow-x: hidden;
-  white-space: pre-wrap;
-  word-break: break-all;
-  border-radius: var(--radius-md);
-  background: var(--color-panel);
-  padding: var(--space-3);
-  font-size: 0.75rem;
-  line-height: 1.25;
-  color: var(--color-muted);
-}

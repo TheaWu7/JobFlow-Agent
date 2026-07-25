@@ -5,6 +5,7 @@ import { Clock, FileClock, Trash2 } from "lucide-react";
 import { clearHistory, loadHistory } from "@/lib/history";
 import type { HistoryRecord } from "@/types/agent";
 import styles from "./history.module.css";
+import { JsonBlock } from "@/components/JsonBlock";
 
 export default function HistoryPage() {
   const [records, setRecords] = useState<HistoryRecord[]>([]);
@@ -57,9 +58,7 @@ export default function HistoryPage() {
                   {new Date(record.createdAt).toLocaleString("zh-CN")}
                 </div>
               </div>
-              <pre className={styles.jsonBlock}>
-                {JSON.stringify(record.artifact, null, 2)}
-              </pre>
+              <JsonBlock data={record.artifact} />
             </article>
           ))}
         </div>

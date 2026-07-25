@@ -1,0 +1,41 @@
+.jsonBlockWrapper {
+  position: relative;
+  margin-top: var(--space-4);
+}
+
+.jsonBlockCopy {
+  position: absolute;
+  top: var(--space-2);
+  right: var(--space-2);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 1.75rem;
+  width: 1.75rem;
+  border-radius: var(--radius-md);
+  border: 1px solid var(--color-line);
+  background: white;
+  color: var(--color-muted);
+  cursor: pointer;
+  z-index: 1;
+  transition: color 0.15s, border-color 0.15s;
+}
+
+.jsonBlockCopy:hover {
+  color: var(--color-ink);
+  border-color: var(--color-brand-30);
+}
+
+.jsonBlock {
+  max-height: 18rem;
+  overflow-y: auto;
+  overflow-x: hidden;
+  white-space: pre-wrap;
+  word-break: break-all;
+  border-radius: var(--radius-md);
+  background: var(--color-panel);
+  padding: var(--space-3);
+  font-size: 0.75rem;
+  line-height: 1.25;
+  color: var(--color-muted);
+}
