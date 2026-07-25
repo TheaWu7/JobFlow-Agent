@@ -47,7 +47,7 @@ export async function POST(request: Request) {
 async function streamDeepSeek(body: ChatRequest, send: (payload: unknown) => void) {
   const apiKey = process.env.DEEPSEEK_API_KEY;
   const baseUrl = process.env.DEEPSEEK_BASE_URL || "https://api.deepseek.com";
-  const model = process.env.DEEPSEEK_MODEL || "deepseek-chat";
+  const model = process.env.DEEPSEEK_MODEL || "deepseek-v4-pro";
 
   if (!apiKey) {
     throw new Error("服务端未配置 DeepSeek API Key。请在 `.env.local` 或 Vercel Environment Variables 中设置。");
