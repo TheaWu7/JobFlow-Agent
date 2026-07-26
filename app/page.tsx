@@ -197,12 +197,12 @@ export default function WorkspacePage() {
   }
 
   function handleReset() {
-try {
-    clearWorkspaceDraft();
-        if (typeof window !== "undefined") {
-      window.dispatchEvent(new Event("interviewflow-workspace-updated"));
-    }
-} catch {}
+    try {
+      clearWorkspaceDraft();
+      if (typeof window !== "undefined") {
+        window.dispatchEvent(new Event("interviewflow-workspace-updated"));
+      }
+    } catch {}
   }
 
   async function runAgent(

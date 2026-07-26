@@ -4,6 +4,7 @@
   height: calc(100vh - 3.5rem);
   overflow: hidden;
   max-width: 80rem;
+  width: 100%; 
   margin: 0 auto;
   gap: var(--space-4);
   padding: var(--space-4) var(--space-4);
@@ -454,7 +455,7 @@
 
 .sendButton:disabled {
   cursor: not-allowed;
-  background: var(--color-muted);
+  background: var(--color-brand-30);
 }
 
 .inputFooter {

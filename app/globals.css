@@ -5,14 +5,14 @@
   --color-muted: #5f6f78;
   --color-line: #d8e0e4;
   --color-panel: #f7f9fa;
-  --color-brand: #2f6f73;
+  --color-brand: #81D8D0;
   --color-accent: #d95f45;
   --color-note: #f2b84b;
 
   /* Derived opacity variants */
-  --color-brand-10: rgba(47, 111, 115, 0.10);
-  --color-brand-30: rgba(47, 111, 115, 0.30);
-  --color-brand-90: rgba(47, 111, 115, 0.90);
+  --color-brand-10: rgba(129, 216, 208, 0.10);
+  --color-brand-30: rgba(129, 216, 208, 0.30);
+  --color-brand-90: rgba(129, 216, 208, 0.90);
   --color-accent-10: rgba(217, 95, 69, 0.10);
   --color-accent-30: rgba(217, 95, 69, 0.30);
   --color-white-15: rgba(255, 255, 255, 0.15);
@@ -62,7 +62,7 @@ body,
   padding: 0;
   /* 用 100vh 直接绑定视口高度，不会继承错乱 */
   height: 100vh;
-  width: 100vw;
+  width: 100%;
   /* 全局关闭上下拉动橡皮筋留白，这行就能解决下拉白边 */
   overscroll-behavior-y: contain;
 }
