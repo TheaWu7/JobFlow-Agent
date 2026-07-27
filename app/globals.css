@@ -5,14 +5,14 @@
   --color-muted: #5f6f78;
   --color-line: #d8e0e4;
   --color-panel: #f7f9fa;
-  --color-brand: #81D8D0;
+  --color-brand: #36bdb0;
   --color-accent: #d95f45;
   --color-note: #f2b84b;
 
   /* Derived opacity variants */
-  --color-brand-10: rgba(129, 216, 208, 0.10);
-  --color-brand-30: rgba(129, 216, 208, 0.30);
-  --color-brand-90: rgba(129, 216, 208, 0.90);
+  --color-brand-10: rgba(54, 191, 177, 0.10);
+  --color-brand-30: rgba(54, 191, 177, 0.30);
+  --color-brand-90: rgba(54, 191, 177, 0.90);
   --color-accent-10: rgba(217, 95, 69, 0.10);
   --color-accent-30: rgba(217, 95, 69, 0.30);
   --color-white-15: rgba(255, 255, 255, 0.15);

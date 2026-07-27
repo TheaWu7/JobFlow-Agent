@@ -75,7 +75,7 @@ export default function WorkspacePage() {
 
     const sync = () => {
       const draft = loadWorkspaceDraft();
-      setMessages(draft.messages.length ? draft.messages : []);
+      setMessages(draft.messages.length ? draft.messages : [defaultGreeting]);
       setInput(draft.input);
       setAttachments(draft.attachments);
       setContext(draft.context);
