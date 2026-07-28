@@ -16,23 +16,47 @@ export function safeJsonParse<T>(raw: string): T | null {
   try {
     return JSON.parse(raw) as T;
   } catch {
-    const fenced = raw.match(/```json\s*([\s\S]*?)```/i)?.[1];
+    // 1. try markdown fenced code block
+    const fenced = raw.match(/```(?:json)?\s*([\s\S]*?)```/i)?.[1];
     if (fenced) {
-      try {
-        return JSON.parse(fenced) as T;
-      } catch {
-        return null;
-      }
+      const result = tryParseJSON<T>(fenced.trim());
+      if (result !== null) return result;
     }
-    const firstBrace = raw.indexOf("{");
+
+    // 2. try brace-delimited JSON — scan from the end backwards
+    //    because the artifact JSON is always at the tail of the response
     const lastBrace = raw.lastIndexOf("}");
-    if (firstBrace >= 0 && lastBrace > firstBrace) {
-      try {
-        return JSON.parse(raw.slice(firstBrace, lastBrace + 1)) as T;
-      } catch {
-        return null;
-      }
+    if (lastBrace < 0) return null;
+
+    // collect candidate start positions: every "{" in the last 40 % of the text
+    const tailStart = Math.floor(raw.length * 0.6);
+    const candidates: number[] = [];
+    let pos = raw.indexOf("{", tailStart);
+    while (pos >= 0 && pos < lastBrace) {
+      candidates.push(pos);
+      pos = raw.indexOf("{", pos + 1);
     }
+
+    // also include the very first "{" as a fallback
+    const firstBrace = raw.indexOf("{");
+    if (firstBrace >= 0 && !candidates.includes(firstBrace)) {
+      candidates.push(firstBrace);
+    }
+
+    // try candidates from the end (closest to the artifact position)
+    for (let i = candidates.length - 1; i >= 0; i--) {
+      const result = tryParseJSON<T>(raw.slice(candidates[i], lastBrace + 1));
+      if (result !== null) return result;
+    }
+
+    return null;
+  }
+}
+
+function tryParseJSON<T>(text: string): T | null {
+  try {
+    return JSON.parse(text) as T;
+  } catch {
     return null;
   }
 }
