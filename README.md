@@ -5,12 +5,31 @@
 ## Features
 
 - JD 结构化解析 + 简历匹配优化
+  <p align="center">
+    <img src="docs/images/resume-1.png" alt="简历匹配1" width="48%" />
+    <img src="docs/images/resume-2.png" alt="简历匹配2" width="48%" />
+  </p>
 - AI 面试准备 + 提供面试时需要注意的知识点&题目
+  <p align="center">
+    <img src="docs/images/interview-1.png" alt="面试准备1" width="48%" />
+    <img src="docs/images/interview-2.png" alt="面试准备2" width="48%" />
+  </p>
 - 面试复盘 + 短板维度分析
+  <p align="center">
+    <img src="docs/images/review-1.png" alt="面试复盘1" width="32%" />
+    <img src="docs/images/review-2.png" alt="面试复盘2" width="32%" />
+    <img src="docs/images/review-3.png" alt="面试复盘3" width="32%" />
+  </p>
 - DeepSeek SSE 服务端代理
 - Demo 模式，无 API Key 也可演示完整流程
 - 本地 History，只读查看历史结果
+  <p align="center">
+    <img src="docs/images/history.png" alt="History" width="60%" />
+  </p>
 - Settings 仅保留 Demo 模式和连接状态提示
+  <p align="center">
+    <img src="docs/images/settings.png" alt="Settings" width="60%" />
+  </p>
 
 ## Tech Stack
 
