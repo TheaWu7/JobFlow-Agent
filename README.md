@@ -1,6 +1,6 @@
 # JobFlow-Agent
 
-单入口 Agent 求职工作台 MVP。用户只通过聊天输入需求，系统自动识别任务、校验素材、调用工作流，并在右侧动态渲染结构化 Artifact。
+单入口 Agent 求职工作台 MVP。用户只通过聊天输入需求，系统自动识别任务、校验素材、调用工作流，并在右侧动态渲染结构化 Artifact。 👉 [线上 Demo 试用](https://interview-agent-hub.vercel.app/)
 
 ## Features
 
