@@ -7,7 +7,7 @@ interface ClassifyRequest {
 }
 
 interface ClassifyResult {
-  type: "jd" | "resume" | "project" | "interview" | "unknown";
+  type: "jd" | "resume" | "interview" | "unknown";
   text: string;
 }
 
@@ -16,7 +16,6 @@ const CLASSIFY_PROMPT = `你是一个文本分类与拆分器。对每段文本�
 类型有五种：
 - jd：职位描述、岗位要求
 - resume：个人简历、工作经历
-- project：项目介绍
 - interview：面试对话记录、面试问答
 - unknown：都不是
 

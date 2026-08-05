@@ -11,16 +11,17 @@ export function buildSystemPrompt(task: TaskType) {
 {"artifact": ...}
 \`\`\`
 JSON 必须符合任务结构，不能省略 artifact.type 和 artifact.title。
+所有评分均为百分制（0-100 分），不要使用十分制或五分制。
 不要编造不存在的经历；如果材料不足，明确指出缺口。`;
 }
 
 const ARTIFACT_SCHEMA: Record<string, string> = {
   resume:
-    "{type:\"resume\",title,jdSummary:{role,seniority,mustHave,niceToHave},matchScore,strengths,gaps,optimizations:[{section,before,after,reason}]}",
+    "{type:\"resume\",title,jdSummary:{role,seniority,mustHave,niceToHave},matchScore(0-100),strengths,gaps,optimizations:[{section,before,after,reason}]}",
   interview:
     "{type:\"interview\",title,jdAnalysis:{summary,examPoints},questions:[{id,question,focus,answer}]}",
   review:
-    "{type:\"review\",title,overallScore,dimensionScores:[{name,score,evidence}],weaknessTags,improvements,practicePlan,questions:[{question,deeperMeaning,idealAnswer}]}",
+    "{type:\"review\",title,overallScore(0-100),dimensionScores:[{name,score(0-100),evidence}],weaknessTags,improvements,practicePlan,questions:[{question,deeperMeaning,idealAnswer}]}",
 };
 
 export function buildUserPrompt(body: {
