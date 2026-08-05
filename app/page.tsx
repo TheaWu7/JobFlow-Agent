@@ -21,6 +21,7 @@ import { readFiles } from "@/lib/fileReader";
 import { saveArtifactToHistory } from "@/lib/history";
 import { loadSettings } from "@/lib/settings";
 import { clearWorkspaceDraft, loadWorkspaceDraft, saveWorkspaceDraft } from "@/lib/workspaceState";
+import { useTypewriter } from "@/hooks/useTypewriter";
 import { cn, uid } from "@/lib/utils";
 import type {
   AgentTraceStep,
@@ -107,6 +108,9 @@ export default function WorkspacePage() {
     scrollRef.current?.scrollTo({ top: scrollRef.current.scrollHeight, behavior: "smooth" });
   }, [messages, isStreaming]);
 
+  // ── typewriter ──
+  const { runTypewriter, clearTypewriter } = useTypewriter(setMessages);
+
   // ── handlers ──
   async function handleFileChange(files: FileList | null) {
     if (!files?.length) return;
@@ -123,6 +127,7 @@ export default function WorkspacePage() {
   async function handleSubmit(event: FormEvent) {
     event.preventDefault();
     if (isStreaming) return;
+    clearTypewriter();
     const trimmed = input.trim();
     if (!trimmed && readyAttachments.length === 0) return;
 
@@ -216,11 +221,7 @@ export default function WorkspacePage() {
       };
       setArtifact(clarifyArtifact);
       setPendingTask(decision.intendedTask);
-      setMessages((current) =>
-        current.map((msg) =>
-          msg.id === assistantId ? { ...msg, content: message } : msg
-        )
-      );
+      runTypewriter(assistantId, message);
       return;
     }
 
@@ -246,6 +247,7 @@ export default function WorkspacePage() {
     placeholderId?: string
   ) {
     setIsStreaming(true);
+    clearTypewriter();
     const assistantId = placeholderId ?? uid("msg");
     if (!placeholderId) {
       setMessages((current) => [
@@ -299,7 +301,7 @@ export default function WorkspacePage() {
       }
     } catch (error) {
       const message = error instanceof Error ? error.message : "Agent 执行失败";
-      appendAssistantDelta(assistantId, `\n${message}`);
+      runTypewriter(assistantId, `\n${message}`);
       setTrace((current) => markLastTrace(current, "error"));
       setArtifact({
         type: "clarify",
@@ -328,7 +330,7 @@ export default function WorkspacePage() {
       setMobileView("artifact");
     }
     if (eventData.type === "error") {
-      appendAssistantDelta(assistantId, `\n${eventData.message}`);
+      runTypewriter(assistantId, `\n${eventData.message}`);
       setTrace((current) => markLastTrace(current, "error"));
     }
     if (eventData.type === "done") {
