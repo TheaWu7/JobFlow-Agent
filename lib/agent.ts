@@ -177,6 +177,44 @@ function isSubstantialContent(text: string | undefined, minLength = 20): boolean
   return true;
 }
 
+/**
+ * 判断输入文本是否"可能包含求职素材"（JD/简历/项目/面试记录）。
+ * 规则：有附件或输入 ≥ 50 字才触发 classify，闲聊短消息直接跳过。
+ */
+export function mightContainMaterial(input: string, hasAttachments: boolean): boolean {
+  if (hasAttachments) return true;
+  return input.trim().length >= 50;
+}
+
+/**
+ * 本地正则分类 — 当能高置信度判断时返回结果，否则返回 null 交由 LLM 处理。
+ * 用于避免对简单输入（如纯 JD 文本）发起不必要的 LLM API 调用。
+ */
+export function classifyByRegex(
+  text: string
+): { type: "jd" | "resume" | "project" | "interview" | "unknown"; text: string } | null {
+  const trimmed = text.trim();
+  if (!trimmed) return null;
+
+  const isJd = looksLikeJd(trimmed);
+  const isResume = looksLikeResume(trimmed);
+  const isProject = looksLikeProject(trimmed);
+  const isInterview =
+    /(面试官|候选人|Q\d*[：:]|A\d*[：:]|问答环节|面试.*问题|面试.*(记录|对话|过程))/i.test(trimmed);
+
+  // 仅命中一种类型 → 高置信度，直接返回
+  const matches = [isJd, isResume, isProject, isInterview].filter(Boolean);
+  if (matches.length === 1) {
+    if (isJd) return { type: "jd", text: trimmed };
+    if (isResume) return { type: "resume", text: trimmed };
+    if (isProject) return { type: "project", text: trimmed };
+    if (isInterview) return { type: "interview", text: trimmed };
+  }
+
+  // 零或多命中 → 内容模糊或混合，交由 LLM 分类+拆分
+  return null;
+}
+
 function looksLikeNewTask(input: string) {
   return taskPatterns.some((item) => item.tests.some((test) => test.test(input)));
 }
