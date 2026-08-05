@@ -72,7 +72,7 @@ export function mergeContextFromInput(
 
   if (classified?.length) {
     for (const item of classified) {
-      if (!item.text) continue;
+      if (!item.text || !isSubstantialContent(item.text)) continue;
       if (item.type === "jd") {
         next.jd = item.text;
       } else if (item.type === "resume") {
@@ -152,12 +152,29 @@ function inferTaskFromContext(input: string): TaskType {
 
 function missingMaterials(task: TaskType, context: WorkspaceContext) {
   if (task === "resume") {
-    return [!context.jd && "jd", !context.resume && "resume"].filter(Boolean) as Array<"jd" | "resume">;
+    return [
+      !isSubstantialContent(context.jd) && "jd",
+      !isSubstantialContent(context.resume) && "resume"
+    ].filter(Boolean) as Array<"jd" | "resume">;
   }
   if (task === "interview") {
-    return [!context.jd && "jd", !context.resume && "resume"].filter(Boolean) as Array<"jd" | "resume">;
+    return [
+      !isSubstantialContent(context.jd) && "jd",
+      !isSubstantialContent(context.resume) && "resume"
+    ].filter(Boolean) as Array<"jd" | "resume">;
   }
   return [];
+}
+
+function isSubstantialContent(text: string | undefined, minLength = 20): boolean {
+  if (!text) return false;
+  const trimmed = text.trim();
+  if (trimmed.length < minLength) return false;
+  // 排除纯标题：仅由标题关键词 + 可选标点组成
+  const titleOnlyRE =
+    /^(目标\s*JD|JD|职位描述|岗位要求|任职要求|个人?简历|简历内容|项目介绍|项目背景|面试记录)[，,。.\s]*$/i;
+  if (titleOnlyRE.test(trimmed)) return false;
+  return true;
 }
 
 function looksLikeNewTask(input: string) {

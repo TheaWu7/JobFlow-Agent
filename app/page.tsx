@@ -142,12 +142,18 @@ export default function WorkspacePage() {
     setAttachments([]);
     setTrace([{ id: uid("trace"), label: "分析输入内容...", status: "running" }]);
 
+    // 快速预检：如果输入仅为素材标题（如"目标JD, 简历"），跳过 classify 节省 API 调用
+    const materialLabelOnlyRE =
+      /^(目标\s*JD|JD|职位描述|岗位要求|任职要求|个人?简历|简历内容|项目介绍|项目背景|面试记录)[，,。.\s]*$/i;
+    const inputIsLabelOnly =
+      readyAttachments.length === 0 && trimmed.length < 30 && materialLabelOnlyRE.test(trimmed);
+
     const pieces = [trimmed, ...readyAttachments.map((a) => a.text)].filter(Boolean);
     let classified:
       | Array<{ type: "jd" | "resume" | "project" | "interview" | "unknown"; text: string }>
       | undefined;
 
-    if (pieces.length) {
+    if (!inputIsLabelOnly && pieces.length) {
       try {
         const res = await fetch("/api/classify", {
           method: "POST",
