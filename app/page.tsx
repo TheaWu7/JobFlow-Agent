@@ -131,10 +131,16 @@ export default function WorkspacePage() {
       attachments,
       createdAt: new Date().toISOString()
     };
-    const nextMessages = [...messages, userMessage];
+    const assistantId = uid("msg");
+    const nextMessages: ChatMessage[] = [
+      ...messages,
+      userMessage,
+      { id: assistantId, role: "assistant", content: "", createdAt: new Date().toISOString() }
+    ];
     setMessages(nextMessages);
     setInput("");
     setAttachments([]);
+    setTrace([{ id: uid("trace"), label: "分析输入内容...", status: "running" }]);
 
     const pieces = [trimmed, ...readyAttachments.map((a) => a.text)].filter(Boolean);
     let classified:
@@ -179,21 +185,17 @@ export default function WorkspacePage() {
       };
       setArtifact(clarifyArtifact);
       setPendingTask(decision.intendedTask);
-      setMessages((current) => [
-        ...current,
-        {
-          id: uid("msg"),
-          role: "assistant",
-          content: message,
-          createdAt: new Date().toISOString()
-        }
-      ]);
+      setMessages((current) =>
+        current.map((msg) =>
+          msg.id === assistantId ? { ...msg, content: message } : msg
+        )
+      );
       return;
     }
 
     setArtifact(null);
     setPendingTask(null);
-    await runAgent(decision.task, trimmed || effectiveInput, mergedContext, nextMessages);
+    await runAgent(decision.task, trimmed || effectiveInput, mergedContext, nextMessages, assistantId);
   }
 
   function handleReset() {
@@ -209,19 +211,22 @@ export default function WorkspacePage() {
     task: TaskType,
     userInput: string,
     nextContext: WorkspaceContext,
-    nextMessages: ChatMessage[]
+    nextMessages: ChatMessage[],
+    placeholderId?: string
   ) {
     setIsStreaming(true);
-    const assistantId = uid("msg");
-    setMessages((current) => [
-      ...current,
-      {
-        id: assistantId,
-        role: "assistant",
-        content: "",
-        createdAt: new Date().toISOString()
-      }
-    ]);
+    const assistantId = placeholderId ?? uid("msg");
+    if (!placeholderId) {
+      setMessages((current) => [
+        ...current,
+        {
+          id: assistantId,
+          role: "assistant",
+          content: "",
+          createdAt: new Date().toISOString()
+        }
+      ]);
+    }
 
     try {
       const response = await fetch("/api/chat", {
