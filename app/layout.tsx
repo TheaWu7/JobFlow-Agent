@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { BriefcaseBusiness } from "lucide-react";
 import { NavLinks } from "@/components/NavLinks";
+import AuthHeader from "@/components/AuthHeader";
 import "./globals.css";
 import styles from "./layout.module.css";
 
@@ -17,6 +18,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
               </Link>
               <nav className={styles.nav}>
                 <NavLinks />
+                <AuthHeader />
               </nav>
             </div>
           </header>
