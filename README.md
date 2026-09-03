@@ -61,7 +61,6 @@ npm run dev
 
 ## Notes
 
-- MVP 不包含登录系统，历史记录仅保存在当前浏览器。
 - 文件上传只是素材输入入口，业务任务仍由聊天自然语言触发。
 - 真实模型模式通过 `/api/chat` 转发 DeepSeek SSE，避免把 API Key 写入仓库。
 - `.pdf` 和 `.docx` 在客户端解析为文本后进入 Agent 上下文。
