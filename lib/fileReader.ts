@@ -41,6 +41,10 @@ async function readFile(file: File): Promise<UploadedAttachment> {
 
 async function readPdf(file: File) {
   const pdfjs = await import("pdfjs-dist");
+  // pdfjs-dist v4 在浏览器端默认会去找 worker 文件（./pdf.worker.mjs），
+  // Next.js 下该文件不在这个路径上，会导致 "No GlobalWorkerOptions.workerSrc specified" 而立即失败。
+  // 手动 import worker 模块会把它注册到 globalThis.pdfjsWorker，pdf.js 即可在主线程直接解析。
+  await import("pdfjs-dist/build/pdf.worker.min.mjs");
   const buffer = await file.arrayBuffer();
   const pdf = await pdfjs.getDocument({ data: buffer, useWorkerFetch: false, isEvalSupported: false }).promise;
   const pages: string[] = [];
