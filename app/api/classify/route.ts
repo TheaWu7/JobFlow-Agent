@@ -13,7 +13,7 @@ interface ClassifyResult {
 
 const CLASSIFY_PROMPT = `你是一个文本分类与拆分器。对每段文本做两件事：分类 + 拆分。
 
-类型有五种：
+类型有四种：
 - jd：职位描述、岗位要求
 - resume：个人简历、工作经历
 - interview：面试对话记录、面试问答

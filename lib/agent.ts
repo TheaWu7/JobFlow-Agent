@@ -66,7 +66,7 @@ export function mergeContextFromInput(
   previous: WorkspaceContext,
   input: string,
   attachments: UploadedAttachment[],
-  classified?: Array<{ type: "jd" | "resume" | "project" | "interview" | "unknown"; text: string }>
+  classified?: Array<{ type: "jd" | "resume" | "interview" | "unknown"; text: string }>,
 ): WorkspaceContext {
   const next = { ...previous };
 
@@ -77,8 +77,6 @@ export function mergeContextFromInput(
         next.jd = item.text;
       } else if (item.type === "resume") {
         next.resume = item.text;
-      } else if (item.type === "project") {
-        next.project = item.text;
       } else if (item.type === "interview") {
         next.interview = item.text;
       }
@@ -95,9 +93,6 @@ export function mergeContextFromInput(
   }
   if (looksLikeResume(combined)) {
     next.resume = combined;
-  }
-  if (looksLikeProject(combined)) {
-    next.project = combined;
   }
   return next;
 }
@@ -172,13 +167,13 @@ function isSubstantialContent(text: string | undefined, minLength = 20): boolean
   if (trimmed.length < minLength) return false;
   // 排除纯标题：仅由标题关键词 + 可选标点组成
   const titleOnlyRE =
-    /^(目标\s*JD|JD|职位描述|岗位要求|任职要求|个人?简历|简历内容|项目介绍|项目背景|面试记录)[，,。.\s]*$/i;
+    /^(目标\s*JD|JD|职位描述|岗位要求|任职要求|个人?简历|简历内容|面试记录|职位|职责)[，,。.\s]*$/i;
   if (titleOnlyRE.test(trimmed)) return false;
   return true;
 }
 
 /**
- * 判断输入文本是否"可能包含求职素材"（JD/简历/项目/面试记录）。
+ * 判断输入文本是否"可能包含求职素材"（JD/简历/面试记录）。
  * 规则：有附件或输入 ≥ 50 字才触发 classify，闲聊短消息直接跳过。
  */
 export function mightContainMaterial(input: string, hasAttachments: boolean): boolean {
@@ -191,23 +186,21 @@ export function mightContainMaterial(input: string, hasAttachments: boolean): bo
  * 用于避免对简单输入（如纯 JD 文本）发起不必要的 LLM API 调用。
  */
 export function classifyByRegex(
-  text: string
-): { type: "jd" | "resume" | "project" | "interview" | "unknown"; text: string } | null {
+  text: string,
+): { type: "jd" | "resume" | "interview" | "unknown"; text: string } | null {
   const trimmed = text.trim();
   if (!trimmed) return null;
 
   const isJd = looksLikeJd(trimmed);
   const isResume = looksLikeResume(trimmed);
-  const isProject = looksLikeProject(trimmed);
   const isInterview =
     /(面试官|候选人|Q\d*[：:]|A\d*[：:]|问答环节|面试.*问题|面试.*(记录|对话|过程))/i.test(trimmed);
 
   // 仅命中一种类型 → 高置信度，直接返回
-  const matches = [isJd, isResume, isProject, isInterview].filter(Boolean);
+  const matches = [isJd, isResume, isInterview].filter(Boolean);
   if (matches.length === 1) {
     if (isJd) return { type: "jd", text: trimmed };
     if (isResume) return { type: "resume", text: trimmed };
-    if (isProject) return { type: "project", text: trimmed };
     if (isInterview) return { type: "interview", text: trimmed };
   }
 
@@ -238,11 +231,3 @@ function looksLikeResume(text: string) {
   return hasTime && hasJobTitle;
 }
 
-function looksLikeProject(text: string) {
-  if (/(项目背景|技术栈|项目职责|项目成果|STAR|负责.*项目|项目经历)/i.test(text)) return true;
-  const lines = text.split('\n').filter(Boolean);
-  if (lines.length < 3) return false;
-  const hasTech = /(react|vue|next|node|python|java|数据库|架构|前端|后端|全栈)/i.test(text);
-  const hasAction = /(负责|搭建|设计|开发|优化|实现|重构|主导|参与|独立)/i.test(text);
-  return hasTech && hasAction;
-}

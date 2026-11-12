@@ -43,9 +43,6 @@ ${context.jd || "无"}
 简历:
 ${context.resume || "无"}
 
-项目:
-${context.project || "无"}
-
 聊天记录:
 ${transcript}
 

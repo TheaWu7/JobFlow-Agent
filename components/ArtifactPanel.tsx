@@ -15,7 +15,7 @@ export const ArtifactPanel = memo(function ArtifactPanel({ artifact }: { artifac
         <ClipboardList className={styles.emptyIcon} />
         <h2 className={styles.emptyTitle}>Artifact 结果面板</h2>
         <p className={styles.emptyText}>
-          在左侧直接描述需求或粘贴 JD、简历、项目材料。Agent 会自动识别任务并在这里切换结构化结果。
+          在左侧直接描述需求或粘贴 JD、简历、面试记录。Agent 会自动识别任务并在这里切换结构化结果。
         </p>
       </section>
     );

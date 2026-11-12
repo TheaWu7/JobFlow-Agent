@@ -33,7 +33,6 @@ export interface AgentTraceStep {
 export interface WorkspaceContext {
   jd?: string;
   resume?: string;
-  project?: string;
   interview?: string | InterviewArtifact;
   lastTask?: TaskType;
 }

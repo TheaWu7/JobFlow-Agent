@@ -50,7 +50,7 @@ const DEMO_INTERVIEW_QUESTIONS = [
   {
     question: "文件上传后如何进入 Agent 上下文？",
     focus: "素材管线",
-    answer: "整个管线分四步：1) 客户端用 pdfjs-dist / mammoth.js 在浏览器侧解析 PDF、Word、文本文件，不需要上传到服务端；2) 解析后的文本进入分类管线——先尝试 `/api/classify` 用小模型分类为 JD/简历/项目，失败则降级为正则启发式匹配；3) 分类后的内容写入 WorkspaceContext（jd / resume / project 字段），同时进入 prompt 上下文；4) Agent 根据任务类型检查素材完整性——缺 JD 或简历就先追问，齐全才发送 API 请求。这样避免了无效的模型调用。",
+    answer: "整个管线分四步：1) 客户端用 pdfjs-dist / mammoth.js 在浏览器侧解析 PDF、Word、文本文件，不需要上传到服务端；2) 解析后的文本进入分类管线——先尝试 `/api/classify` 用小模型分类为 JD/简历/面试记录，失败则降级为正则启发式匹配；3) 分类后的内容写入 WorkspaceContext（jd / resume 字段），同时进入 prompt 上下文；4) Agent 根据任务类型检查素材完整性——缺 JD 或简历就先追问，齐全才发送 API 请求。这样避免了无效的模型调用。",
   },
   {
     question: "Demo 模式和真实模型模式如何共存？",

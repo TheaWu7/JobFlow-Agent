@@ -39,7 +39,7 @@ const defaultGreeting: ChatMessage = {
   id: uid("msg"),
   role: "assistant",
   content:
-    "你好，我是 JobFlow-Agent。直接告诉我你要做什么，或粘贴 JD、简历、项目材料，我会自动判断任务并在右侧生成结果。",
+    "你好，我是 JobFlow-Agent。直接告诉我你要做什么，或粘贴 JD、简历、面试记录，我会自动判断任务并在右侧生成结果。",
   createdAt: new Date().toISOString(),
 };
 
@@ -151,13 +151,13 @@ export default function WorkspacePage() {
 
     const pieces = [trimmed, ...readyAttachments.map((a) => a.text)].filter(Boolean);
     let classified:
-      | Array<{ type: "jd" | "resume" | "project" | "interview" | "unknown"; text: string }>
+      | Array<{ type: "jd" | "resume" | "interview" | "unknown"; text: string }>
       | undefined;
 
     // 仅当输入"可能包含求职素材"时才触发 classify，闲聊消息（hi、谢谢等）直接跳过
     if (mightContainMaterial(trimmed, readyAttachments.length > 0) && pieces.length) {
       // 本地正则预分类 — 高置信度命中直接采用，避免不必要的 LLM API 调用
-      const regexResults: Array<{ type: "jd" | "resume" | "project" | "interview" | "unknown"; text: string }> = [];
+      const regexResults: Array<{ type: "jd" | "resume" | "interview" | "unknown"; text: string }> = [];
       const unknownPieces: string[] = [];
 
       for (const piece of pieces) {
@@ -173,7 +173,7 @@ export default function WorkspacePage() {
         const labels = regexResults.map((r) => r.type).join("、");
         setTrace((current) => [
           ...current,
-          { id: uid("trace"), label: `正则分类完成：${labels}`, status: "done" },
+          { id: uid("trace"), label: `分类完成：${labels}`, status: "done" },
         ]);
       }
 
