@@ -8,6 +8,7 @@ import {
 } from "lucide-react";
 import styles from "./home.module.css";
 import { TypewriterText } from "@/components/TypewriterText";
+import { MosaicDecor } from "@/components/MosaicDecor";
 
 const FEATURES = [
   {
@@ -30,6 +31,8 @@ const FEATURES = [
 export default function HomePage() {
   return (
     <main className={styles.page}>
+      <MosaicDecor />
+      <MosaicDecor corner="bl" />
       <div className={styles.pageInner}>
         {/* Hero */}
         <section className={styles.hero}>
