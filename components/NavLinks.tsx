@@ -30,7 +30,7 @@ function NavLink({
 export function NavLinks() {
   return (
     <>
-      <NavLink href="/" label="Workspace" icon={BriefcaseBusiness} />
+      <NavLink href="/workspace" label="Workspace" icon={BriefcaseBusiness} />
       <NavLink href="/history" label="History" icon={History} />
       <NavLink href="/settings" label="Settings" icon={Settings} />
     </>

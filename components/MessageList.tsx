@@ -4,7 +4,7 @@ import { cn } from "@/lib/utils";
 import type { AgentTraceStep, ChatMessage } from "@/types/agent";
 import { Markdown } from "./Markdown";
 import { TraceList } from "./TraceList";
-import styles from "../app/page.module.css";
+import styles from "../app/workspace/page.module.css";
 
 export function MessageList({
   messages,

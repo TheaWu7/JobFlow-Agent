@@ -4,7 +4,7 @@ import { FormEvent } from "react";
 import { Loader2, Paperclip, Send, UploadCloud, X } from "lucide-react";
 import { cn } from "@/lib/utils";
 import type { UploadedAttachment } from "@/types/agent";
-import styles from "../app/page.module.css";
+import styles from "../app/workspace/page.module.css";
 
 export function ChatInput({
   attachments,

@@ -4,7 +4,7 @@ import { useEffect, useRef, useState } from "react";
 import { ChevronDown } from "lucide-react";
 import { cn } from "@/lib/utils";
 import type { AgentTraceStep } from "@/types/agent";
-import styles from "../app/page.module.css";
+import styles from "../app/workspace/page.module.css";
 
 export function TraceList({ trace }: { trace: AgentTraceStep[] }) {
   const [collapsed, setCollapsed] = useState(false);

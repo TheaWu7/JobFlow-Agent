@@ -41,7 +41,7 @@ export async function updateSession(request: NextRequest) {
   const { pathname } = request.nextUrl;
   const isAuthPage = pathname.startsWith("/login");
   const isProtected =
-    pathname === "/" ||
+    pathname.startsWith("/workspace") ||
     pathname.startsWith("/history") ||
     pathname.startsWith("/settings");
 

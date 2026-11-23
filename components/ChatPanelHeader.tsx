@@ -1,7 +1,7 @@
 "use client";
 
 import { Sparkles } from "lucide-react";
-import styles from "../app/page.module.css";
+import styles from "../app/workspace/page.module.css";
 
 export function ChatPanelHeader({ onReset }: { onReset: () => void }) {
   return (
