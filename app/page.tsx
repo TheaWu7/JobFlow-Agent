@@ -7,6 +7,7 @@ import {
   MessageSquareText,
 } from "lucide-react";
 import styles from "./home.module.css";
+import { TypewriterText } from "@/components/TypewriterText";
 
 const FEATURES = [
   {
@@ -36,7 +37,9 @@ export default function HomePage() {
             <BriefcaseBusiness size={16} />
             JobFlow Agent
           </span>
-          <h1 className={styles.title}>你的 AI 求职工作台</h1>
+          <h1 className={styles.title}>
+            <TypewriterText text="你的 AI 求职工作台" />
+          </h1>
           <p className={styles.subtitle}>
             从简历优化、面试准备到面试复盘，一站式准备好你的下一份工作。
           </p>
