@@ -54,17 +54,17 @@
 [data-theme="dark"] {
   color-scheme: dark;
 
-  --color-ink: #e7eef2;
-  --color-muted: #8fa1ab;
-  --color-line: #2c3a44;
-  --color-panel: #1d2933;
-  --color-surface: #162028;
+  --color-ink: #e6edf3;
+  --color-muted: #8b949e;
+  --color-line: #30363d;
+  --color-panel: #21262d;
+  --color-surface: #161b22;
 
   /* 半透明表面（深色版） */
   --color-surface-15: rgba(255, 255, 255, 0.10);
-  --color-surface-88: rgba(22, 32, 40, 0.88);
-  --color-surface-70: rgba(15, 22, 28, 0.70);
-  --color-panel-60: rgba(29, 41, 51, 0.60);
+  --color-surface-88: rgba(22, 27, 34, 0.88);
+  --color-surface-70: rgba(13, 17, 23, 0.70);
+  --color-panel-60: rgba(33, 38, 45, 0.60);
   --color-shimmer: #4a5a64;
 
   /* 棋盘格装饰（深色下更淡） */
@@ -73,13 +73,13 @@
 
   --shadow-soft: 0 16px 48px rgba(0, 0, 0, 0.45);
 
-  background: #0f161c;
+  background: #0d1117;
 }
 
 [data-theme="dark"] body {
   background:
-    linear-gradient(180deg, rgba(22, 32, 40, 0.86), rgba(15, 22, 28, 0.94)),
-    #0f161c;
+    linear-gradient(180deg, rgba(22, 27, 34, 0.86), rgba(13, 17, 23, 0.94)),
+    #0d1117;
 }
 
 /* ===== Reset / Base ===== */
