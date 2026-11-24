@@ -8,8 +8,6 @@ const useIsomorphicLayoutEffect =
   typeof window !== "undefined" ? useLayoutEffect : useEffect;
 
 const TILE = 18; // 目标格子边长（px）
-const DARK = "rgba(54, 191, 177, 0.44)"; // 深格
-const LIGHT = "rgba(54, 191, 177, 0.1)"; // 浅格
 const BULGE = 0.12; // 椭圆切角的凹进程度：0=直线，越大越凹
 
 type Tile = {
@@ -17,7 +15,7 @@ type Tile = {
   x: number;
   y: number;
   s: number;
-  fill: string;
+  dark: boolean;
   opacity: number;
 };
 
@@ -45,7 +43,7 @@ function buildTiles(w: number, h: number, flip: boolean): Tile[] {
         x: c * tile,
         y: r * tile,
         s: tile,
-        fill: (c + r) % 2 === 0 ? DARK : LIGHT,
+        dark: (c + r) % 2 === 0,
         opacity,
       });
     }
@@ -90,7 +88,7 @@ export function MosaicDecor({ corner = "tr" }: { corner?: "tr" | "bl" }) {
               y={t.y}
               width={t.s}
               height={t.s}
-              fill={t.fill}
+              className={t.dark ? styles.tileDark : styles.tileLight}
               fillOpacity={t.opacity}
             />
           ))}

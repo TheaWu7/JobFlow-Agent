@@ -5,9 +5,14 @@
   --color-muted: #5f6f78;
   --color-line: #d8e0e4;
   --color-panel: #f7f9fa;
+  --color-surface: #ffffff;
   --color-brand: #36bdb0;
   --color-accent: #d95f45;
   --color-note: #f2b84b;
+
+  /* 棋盘格装饰 */
+  --mosaic-dark: rgba(54, 191, 177, 0.44);
+  --mosaic-light: rgba(54, 191, 177, 0.10);
 
   /* Derived opacity variants */
   --color-brand-10: rgba(54, 191, 177, 0.10);
@@ -15,10 +20,11 @@
   --color-brand-90: rgba(54, 191, 177, 0.90);
   --color-accent-10: rgba(217, 95, 69, 0.10);
   --color-accent-30: rgba(217, 95, 69, 0.30);
-  --color-white-15: rgba(255, 255, 255, 0.15);
-  --color-white-88: rgba(255, 255, 255, 0.88);
+  --color-surface-15: rgba(255, 255, 255, 0.15);
+  --color-surface-88: rgba(255, 255, 255, 0.88);
   --color-panel-60: rgba(247, 249, 250, 0.60);
-  --color-white-70: rgba(255, 255, 255, 0.70);
+  --color-surface-70: rgba(255, 255, 255, 0.70);
+  --color-shimmer: #cccccc;
 
   /* Shadows */
   --shadow-soft: 0 16px 48px rgba(23, 32, 38, 0.08);
@@ -42,6 +48,38 @@
 
   color-scheme: light;
   background: #eef3f4;
+}
+
+/* ===== 深色主题 ===== */
+[data-theme="dark"] {
+  color-scheme: dark;
+
+  --color-ink: #e7eef2;
+  --color-muted: #8fa1ab;
+  --color-line: #2c3a44;
+  --color-panel: #1d2933;
+  --color-surface: #162028;
+
+  /* 半透明表面（深色版） */
+  --color-surface-15: rgba(255, 255, 255, 0.10);
+  --color-surface-88: rgba(15, 22, 28, 0.82);
+  --color-surface-70: rgba(15, 22, 28, 0.70);
+  --color-panel-60: rgba(29, 41, 51, 0.60);
+  --color-shimmer: #4a5a64;
+
+  /* 棋盘格装饰（深色下更淡） */
+  --mosaic-dark: rgba(54, 191, 177, 0.16);
+  --mosaic-light: rgba(54, 191, 177, 0.05);
+
+  --shadow-soft: 0 16px 48px rgba(0, 0, 0, 0.45);
+
+  background: #0f161c;
+}
+
+[data-theme="dark"] body {
+  background:
+    linear-gradient(180deg, rgba(22, 32, 40, 0.86), rgba(15, 22, 28, 0.94)),
+    #0f161c;
 }
 
 /* ===== Reset / Base ===== */

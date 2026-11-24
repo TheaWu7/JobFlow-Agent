@@ -49,7 +49,7 @@
 
 .mobileTabActive {
   border-color: var(--color-brand);
-  background: white;
+  background: var(--color-surface);
   color: var(--color-brand);
 }
 
@@ -65,7 +65,7 @@
   height: 100%;
   border-radius: var(--radius-lg);
   border: 1px solid var(--color-line);
-  background: white;
+  background: var(--color-surface);
   box-shadow: var(--shadow-soft);
   display: flex;
   flex-direction: column;
@@ -196,7 +196,7 @@
 
 .attachmentItem {
   border-radius: var(--radius-md);
-  background: var(--color-white-15);
+  background: var(--color-surface-15);
   padding: var(--space-1) var(--space-2);
   font-size: 0.75rem;
 }
@@ -266,7 +266,7 @@
   height: 1.125rem;
   pointer-events: none;
   z-index: 1;
-  background: linear-gradient(to bottom, var(--color-white-88), transparent);
+  background: linear-gradient(to bottom, var(--color-surface-88), transparent);
 }
 
 .traceList {
@@ -293,8 +293,8 @@
 }
 
 .traceLabelRunning {
-  /* 固定高对比颜色，排除变量干扰 */
-  background-image: linear-gradient(90deg, #cccccc 15%, var(--color-muted) 50%, #cccccc 85%);
+  /* 流光两端颜色，随主题切换 */
+  background-image: linear-gradient(90deg, var(--color-shimmer) 15%, var(--color-muted) 50%, var(--color-shimmer) 85%);
   background-size: 200% 100%;
   background-position: 0% 0%;
   -webkit-background-clip: text;
@@ -432,7 +432,7 @@
 
 .textarea:focus {
   border-color: var(--color-brand);
-  background: white;
+  background: var(--color-surface);
 }
 
 .sendButton {

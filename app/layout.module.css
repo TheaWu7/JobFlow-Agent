@@ -16,7 +16,7 @@
   top: 0;
   z-index: 20;
   border-bottom: 1px solid var(--color-line);
-  background: var(--color-white-88);
+  background: var(--color-surface-88);
   backdrop-filter: blur(8px);
   -webkit-backdrop-filter: blur(8px);
 }
