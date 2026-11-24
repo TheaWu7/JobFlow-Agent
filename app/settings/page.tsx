@@ -46,9 +46,6 @@ export default function SettingsPage() {
     <main className={styles.page}>
       <div className={styles.header}>
         <h1 className={styles.title}>Settings</h1>
-        <p className={styles.subtitle}>
-          这里只保留 Demo 模式。真实模型配置请放在 `.env.local` 或 Vercel Environment Variables 中。
-        </p>
       </div>
 
       <section className={styles.section}>
@@ -58,7 +55,7 @@ export default function SettingsPage() {
           onClick={() => update("demoMode", !settings.demoMode)}
         >
           <span>
-            <span className={styles.toggleLabel}>Demo 模式</span>
+          <span className={styles.toggleLabel}>Demo 模式</span>
             <span className={styles.toggleHint}>开启后不调用真实模型，使用内置样例完成端到端演示。</span>
           </span>
           {settings.demoMode ? <ToggleRight className={styles.toggleIconOn} /> : <ToggleLeft className={styles.toggleIconOff} />}
@@ -75,10 +72,6 @@ export default function SettingsPage() {
             校验连接
           </button>
         </div>
-
-        <p className={styles.hint}>
-          本地测试时，在项目根目录创建 `.env.local`，写入 `DEEPSEEK_API_KEY`、`DEEPSEEK_BASE_URL`、`DEEPSEEK_MODEL`。
-        </p>
 
         {message && (
           <p className={`${styles.statusMessage} ${status === "error" ? styles.statusError : styles.statusOk}`}>
